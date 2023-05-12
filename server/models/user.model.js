@@ -7,6 +7,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    index: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
   },
   {
     collection: "User", // Specify the desired collection name
