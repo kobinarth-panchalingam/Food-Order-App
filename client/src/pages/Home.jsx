@@ -21,11 +21,11 @@ function App() {
           <Nav.Link href="#" onClick={() => handleTabSelect("tab1")} active={activeTab === "tab1"}>
             Order Here
           </Nav.Link>
-          <Nav.Link href="#" onClick={() => handleTabSelect("tab2")} active={activeTab === "tab2"}>
-            All Orders
-          </Nav.Link>
           <Nav.Link href="#" onClick={() => handleTabSelect("tab3")} active={activeTab === "tab3"}>
             Your Order
+          </Nav.Link>
+          <Nav.Link href="#" onClick={() => handleTabSelect("tab2")} active={activeTab === "tab2"}>
+            All Orders
           </Nav.Link>
         </Nav>
       </Navbar>
