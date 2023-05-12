@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import FoodMenu from "../components/FoodMenu";
+import FoodSummary from "../components/FoodSummary";
 
 function App() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -31,8 +32,7 @@ function App() {
 
       {activeTab === "tab2" && (
         <div>
-          <h2>Tab 2 Content</h2>
-          {/* Add your content for Tab 2 */}
+          <FoodSummary />
         </div>
       )}
     </>

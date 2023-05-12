@@ -16,6 +16,7 @@ const Login = () => {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users?index=${index}`);
         const user = response.data.user;
         if (user) {
+          LocalStorageService.setItem("_id", user._id);
           setName(user.name);
           setLock(true);
         } else {
@@ -36,7 +37,7 @@ const Login = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index });
       const user = response.data.user;
-      console.log("User logged in:", user);
+      console.log("User logged in:", name);
       LocalStorageService.setItem("userName", name);
       LocalStorageService.setItem("index", index);
       // Redirect or perform additional actions upon successful login

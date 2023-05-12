@@ -7,7 +7,7 @@ import LocalStorageService from "../utils/LocalStorageService";
 function FoodMenu() {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const userName = LocalStorageService.getItem('userName');
+  const userId = LocalStorageService.getItem("_id");
 
   useEffect(() => {
     // Fetch food data from backend server
@@ -52,23 +52,42 @@ function FoodMenu() {
   };
 
   const handleOrderSubmit = () => {
+    // const orderList = foods.filter((food) => food.quantity > 0);
+    // // Send orderList data to backend server
+    // console.log(orderList);
+    // axios
+    //   .post("/api/orders", { orderList })
+    //   .then((response) => {
+    //     // Handle successful order submission
+    //     console.log("Order submitted successfully:", response.data);
+    //     const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
+    //     setFoods(resetFoods);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error submitting order:", error);
+    //   });
+
     const orderList = foods.filter((food) => food.quantity > 0);
     // Send orderList data to backend server
-    axios
-      .post("/api/orders", { orderList })
-      .then((response) => {
-        // Handle successful order submission
-        console.log("Order submitted successfully:", response.data);
-        const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
-        setFoods(resetFoods);
-      })
-      .catch((error) => {
-        console.error("Error submitting order:", error);
-      });
+    orderList.forEach((order) => {
+      const { _id: foodId, quantity } = order;
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, foodId, quantity })
+        .then((response) => {
+          // Handle successful order submission
+          console.log("Order submitted successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error submitting order:", error);
+        });
+    });
+
+    const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
+    setFoods(resetFoods);
   };
 
   return (
-    <div>
+    <div className="text-center">
       <h2>Food Menu</h2>
       <Table bordered responsive>
         <thead>
@@ -82,7 +101,7 @@ function FoodMenu() {
             <tr key={food._id} className={food.quantity > 0 ? "selected-row" : ""}>
               <td>
                 <div>{food.name}</div>
-                <div className="text-secondary">Price: ${food.price}</div>
+                <div className="text-secondary">Price: Rs.{food.price}</div>
               </td>
               <td>
                 <Button variant="danger" onClick={() => handleDecrement(food)} disabled={food.quantity === 0}>
@@ -98,11 +117,17 @@ function FoodMenu() {
         </tbody>
       </Table>
 
-      <div>
-        <h4>Total Price: ${totalPrice}</h4>
-      </div>
+      <div className="row">
+        <div className="col-6">
+          <h4>Total Price: Rs.{totalPrice}</h4>
+        </div>
 
-      <button onClick={handleOrderSubmit}>Submit Order</button>
+        <div className="col-6">
+          <Button variant="warning" onClick={handleOrderSubmit}>
+            Submit Order
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
