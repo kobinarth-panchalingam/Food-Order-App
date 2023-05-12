@@ -52,8 +52,24 @@ const foodData = [
     price: 277,
   },
   {
-    name: "Mani Puttu",
-    price: 195,
+    name: "Thosai 2 Nos",
+    price: 230,
+  },
+  {
+    name: "Paratha 1 set",
+    price: 180,
+  },
+  {
+    name: "Shawarma",
+    price: 150,
+  },
+  {
+    name: "Gee Thosa",
+    price: 325,
+  },
+  {
+    name: "Naan Rotti",
+    price: 140,
   },
   // Add more food items as needed
 ];

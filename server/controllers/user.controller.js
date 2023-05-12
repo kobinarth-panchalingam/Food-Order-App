@@ -14,9 +14,9 @@ const createUser = async (req, res) => {
 
     // User does not exist, proceed to create and save the new user
     const newUser = new User({ name, index });
-    await newUser.save();
+    const savedUser = await newUser.save();
 
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    res.status(201).json({ message: "User created successfully", userId: savedUser._id });
   } catch (error) {
     res.status(500).json({ message: "Failed to create user", error: error.message });
   }
