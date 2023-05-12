@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { createOrder, getOrders, getOrdersByDate } = require("../controllers/order.controller");
+const { createOrder, getOrders, getOrdersByDate, deleteOrder, getOrdersByUser } = require("../controllers/order.controller");
 
 // Order routes
 router.post("/", createOrder);
 router.get("/", getOrdersByDate);
+router.get("/user/:userId", getOrdersByUser);
+router.delete("/:orderId", deleteOrder);
 
 module.exports = router;

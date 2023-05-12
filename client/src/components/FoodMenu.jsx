@@ -4,7 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import "./FoodMenu.css";
 import LocalStorageService from "../utils/LocalStorageService";
 
-function FoodMenu() {
+function FoodMenu({ tab }) {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const userId = LocalStorageService.getItem("_id");
@@ -76,6 +76,7 @@ function FoodMenu() {
         .then((response) => {
           // Handle successful order submission
           console.log("Order submitted successfully:", response.data);
+          tab("tab3");
         })
         .catch((error) => {
           console.error("Error submitting order:", error);
