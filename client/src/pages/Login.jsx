@@ -50,7 +50,7 @@ const Login = () => {
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="row justify-content-center">
-        <div className="col-md-6">
+        <div className="col-md-12">
           <div className="card">
             <div className="card-body">
               <h3 className="card-title">Login</h3>
