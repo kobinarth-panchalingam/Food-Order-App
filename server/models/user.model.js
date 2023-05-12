@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
+    },
   },
   {
     collection: "User", // Specify the desired collection name

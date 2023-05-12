@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 
 // Controller to create a new user
 const createUser = async (req, res) => {
-  const { name, index } = req.body;
+  const { name, index, gender } = req.body;
 
   try {
     // Check if the user already exists
@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
     }
 
     // User does not exist, proceed to create and save the new user
-    const newUser = new User({ name, index });
+    const newUser = new User({ name, index, gender });
     const savedUser = await newUser.save();
 
     res.status(201).json({ message: "User created successfully", userId: savedUser._id });

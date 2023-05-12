@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [index, setIndex] = useState("");
   const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
   const [lock, setLock] = useState(false);
   const navigate = useNavigate();
 
@@ -17,7 +18,9 @@ const Login = () => {
         const user = response.data.user;
         if (user) {
           LocalStorageService.setItem("_id", user._id);
+          setGender(user.gender);
           setName(user.name);
+          setGender(user.gender);
           setLock(true);
         } else {
           setLock(false);
@@ -35,12 +38,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index, gender });
       const userId = response.data.userId;
       console.log("User logged in:", userId);
       LocalStorageService.setItem("_id", userId);
       LocalStorageService.setItem("userName", name);
       LocalStorageService.setItem("index", index);
+      LocalStorageService.setItem("gender", gender);
       // Redirect or perform additional actions upon successful login
       navigate("/home");
     } catch (error) {
@@ -76,6 +80,41 @@ const Login = () => {
                     required
                   />
                 </div>
+                {!lock && (
+                  <div className="mb-3">
+                    <label className="form-label">Gender:</label>
+                    <div className="form-check">
+                      <input
+                        type="radio"
+                        className="form-check-input"
+                        id="male"
+                        name="gender"
+                        value="male"
+                        checked={gender === "male"}
+                        onChange={() => setGender("male")}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="male">
+                        Male
+                      </label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        type="radio"
+                        className="form-check-input"
+                        id="female"
+                        name="gender"
+                        value="female"
+                        checked={gender === "female"}
+                        onChange={() => setGender("female")}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="female">
+                        Female
+                      </label>
+                    </div>
+                  </div>
+                )}
                 <button type="submit" className="btn btn-primary">
                   Login
                 </button>
