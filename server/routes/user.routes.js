@@ -5,5 +5,6 @@ const { createUser, getUsers, getUserByIndex } = require("../controllers/user.co
 // User routes
 router.post("/", createUser);
 router.get("/", getUserByIndex);
+router.get("/all", getUsers);
 
 module.exports = router;
