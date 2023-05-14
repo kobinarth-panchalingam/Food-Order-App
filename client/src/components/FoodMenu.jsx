@@ -55,39 +55,36 @@ function FoodMenu({ tab }) {
 
   const handleOrderSubmit = () => {
     const orderList = foods.filter((food) => food.quantity > 0);
+    const userId = user._id;
     // Send orderList data to backend server
-    orderList.forEach((order) => {
-      const userId = user._id;
-      const { _id: foodId, quantity } = order;
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, foodId, quantity })
-        .then((response) => {
-          // Handle successful order submission
-          toast.success("Suucessfully ordered", {
-            position: "bottom-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        })
-        .catch((error) => {
-          console.error("Error submitting order:", error);
-          toast.error("Submission failed", {
-            position: "bottom-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, orderList })
+      .then((response) => {
+        // Handle successful order submission
+        toast.success("Suucessfully ordered", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
-    });
+      })
+      .catch((error) => {
+        console.error("Error submitting order:", error);
+        toast.error("Submission failed", {
+          position: "bottom-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
 
     const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
     setFoods(resetFoods);

@@ -38,8 +38,16 @@ function FoodSummary() {
           orders: [{ food: food.name, quantity }],
         };
       } else {
-        // If the user is already in the map, add the order to their existing orders
-        userOrderMap[user.name].orders.push({ food: food.name, quantity });
+        // If the user is already in the map, check if the food already exists in their orders
+        const existingOrder = userOrderMap[user.name].orders.find((order) => order.food === food.name);
+
+        if (existingOrder) {
+          // If the food already exists, add the quantity to the existing order
+          existingOrder.quantity += quantity;
+        } else {
+          // If the food doesn't exist, add a new order
+          userOrderMap[user.name].orders.push({ food: food.name, quantity });
+        }
       }
     });
 

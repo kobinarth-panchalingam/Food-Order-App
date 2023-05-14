@@ -3,12 +3,19 @@ const Order = require("../models/order.model");
 // Controller to create a new order
 const createOrder = async (req, res) => {
   try {
-    const { userId, foodId, quantity } = req.body;
+    const { userId, orderList } = req.body;
 
-    // Create order in the database
-    const order = await Order.create({ user: userId, food: foodId, quantity });
+    // Create an array of order documents
+    const orders = orderList.map((order) => ({
+      user: userId,
+      food: order._id,
+      quantity: order.quantity,
+    }));
 
-    res.status(201).json({ success: true, order });
+    // Insert multiple orders into the database
+    const result = await Order.insertMany(orders);
+
+    res.status(201).json({ success: true, result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Order creation failed" });
