@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
-import "./FoodMenu.css";
+import "../styles/style.css";
 import LocalStorageService from "../utils/LocalStorageService";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function FoodMenu({ tab }) {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const userId = LocalStorageService.getItem("_id");
+  const user = JSON.parse(LocalStorageService.getItem("user"));
 
   useEffect(() => {
     // Fetch food data from backend server
@@ -52,34 +54,38 @@ function FoodMenu({ tab }) {
   };
 
   const handleOrderSubmit = () => {
-    // const orderList = foods.filter((food) => food.quantity > 0);
-    // // Send orderList data to backend server
-    // console.log(orderList);
-    // axios
-    //   .post("/api/orders", { orderList })
-    //   .then((response) => {
-    //     // Handle successful order submission
-    //     console.log("Order submitted successfully:", response.data);
-    //     const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
-    //     setFoods(resetFoods);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error submitting order:", error);
-    //   });
-
     const orderList = foods.filter((food) => food.quantity > 0);
     // Send orderList data to backend server
     orderList.forEach((order) => {
+      const userId = user._id;
       const { _id: foodId, quantity } = order;
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, foodId, quantity })
         .then((response) => {
           // Handle successful order submission
-          console.log("Order submitted successfully:", response.data);
-          tab("tab3");
+          toast.success("Suucessfully ordered", {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         })
         .catch((error) => {
           console.error("Error submitting order:", error);
+          toast.error("Submission failed", {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         });
     });
 
@@ -90,7 +96,7 @@ function FoodMenu({ tab }) {
   return (
     <div className="text-center">
       <h2>Food Menu</h2>
-      <Table bordered responsive>
+      <Table striped bordered responsive>
         <thead>
           <tr>
             <th>Food</th>
@@ -127,6 +133,7 @@ function FoodMenu({ tab }) {
           <Button variant="warning" onClick={handleOrderSubmit}>
             Submit Order
           </Button>
+          <ToastContainer />
         </div>
       </div>
     </div>

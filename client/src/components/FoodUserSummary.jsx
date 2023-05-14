@@ -5,20 +5,20 @@ import LocalStorageService from "../utils/LocalStorageService";
 
 function UserOrders() {
   const [orders, setOrders] = useState([]);
-  const userId = LocalStorageService.getItem("_id");
-  const name = LocalStorageService.getItem("userName");
+  const user = JSON.parse(LocalStorageService.getItem("user"));
+  // const name = LocalStorageService.getItem("userName");
 
   useEffect(() => {
     // Fetch user-specific orders from backend server
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/orders/user/${userId}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/orders/user/${user._id}`)
       .then((response) => {
         setOrders(response.data);
       })
       .catch((error) => {
         console.error("Error fetching user orders:", error);
       });
-  }, [userId]);
+  }, [user._id]);
 
   const handleDeleteOrder = (orderId) => {
     // Send delete request to backend server
@@ -37,7 +37,7 @@ function UserOrders() {
 
   return (
     <div className="text-center">
-      <h2>{name} Orders</h2>
+      <h2>{user.name} Orders</h2>
       <Table bordered responsive>
         <thead>
           <tr>

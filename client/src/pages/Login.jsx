@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LocalStorageService from "../utils/LocalStorageService";
 import { useNavigate } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
-
 const Login = () => {
   const [index, setIndex] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [lock, setLock] = useState(false);
   const [loading, setLoading] = useState(true); // Add loading state
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +17,7 @@ const Login = () => {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users?index=${index}`);
         const user = response.data.user;
         if (user) {
-          LocalStorageService.setItem("_id", user._id);
+          LocalStorageService.setItem("user", JSON.stringify(user));
           setGender(user.gender);
           setName(user.name);
           setGender(user.gender);
@@ -33,18 +30,21 @@ const Login = () => {
         console.log(error);
       }
     };
-
-    fetchUser();
+    if (index.length === 6) {
+      fetchUser();
+    } else {
+      setName("");
+      setLock(false);
+    }
   }, [index]);
 
   useEffect(() => {
-    // Fetch existing user based on the index number
+    // to wait until backend responds
     const fetchUser = async () => {
       let x = false;
       while (!x) {
         try {
           const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/all`);
-          console.log(response.status);
           if (response.status === 200) {
             setLoading(false);
             x = true;
@@ -60,16 +60,9 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index, gender });
-      const userId = response.data.userId;
-      console.log("User logged in:", userId);
-      LocalStorageService.setItem("_id", userId);
-      LocalStorageService.setItem("userName", name);
-      LocalStorageService.setItem("index", index);
-      LocalStorageService.setItem("gender", gender);
-      // Redirect or perform additional actions upon successful login
+      LocalStorageService.setItem("user", JSON.stringify(response.data.user));
       navigate("/home");
     } catch (error) {
       console.error(error);
@@ -79,7 +72,7 @@ const Login = () => {
   return (
     <>
       {loading ? (
-        <div className="mt-5 d-flex justify-content-center">
+        <div className="container d-flex align-items-center justify-content-center vh-100">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>

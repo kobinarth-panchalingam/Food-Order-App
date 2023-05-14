@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table } from "react-bootstrap";
-import LocalStorageService from "../utils/LocalStorageService";
 
 function FoodSummary() {
   const [foodSummary, setFoodSummary] = useState([]);
   const [show, setShow] = useState(false);
-  const gender = LocalStorageService.getItem("gender");
+  const [userOrders, setUserOrders] = useState([]);
 
   useEffect(() => {
     axios
@@ -16,45 +15,38 @@ function FoodSummary() {
         const summary = calculateFoodSummary(orders);
         setFoodSummary(summary);
         setShow(true);
+
+        const userOrders = getUserOrders(orders);
+        setUserOrders(userOrders);
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
       });
   }, []);
 
-  // const calculateFoodSummary = (orders) => {
-  //   const summary = {};
-  //   let totalFoods = 0;
-  //   let totalPrice = 0;
-  //   let maleFoods = 0;
-  //   let femaleFoods = 0;
+  const getUserOrders = (orders) => {
+    // Create a map to store user orders
+    const userOrderMap = {};
 
-  //   orders.forEach((order) => {
-  //     const { food, quantity } = order;
-  //     if (summary[food._id]) {
-  //       summary[food._id].quantity += quantity;
-  //       summary[food._id].totalPrice += food.price * quantity;
-  //     } else {
-  //       summary[food._id] = {
-  //         food: food.name,
-  //         quantity,
-  //         totalPrice: food.price * quantity,
-  //       };
-  //     }
+    orders.forEach((order) => {
+      const { user, food, quantity } = order;
 
-  //     totalFoods += quantity;
-  //     totalPrice += food.price;
+      if (!userOrderMap[user.name]) {
+        // If the user is not in the map, create an entry for them
+        userOrderMap[user.name] = {
+          name: user.name,
+          orders: [{ food: food.name, quantity }],
+        };
+      } else {
+        // If the user is already in the map, add the order to their existing orders
+        userOrderMap[user.name].orders.push({ food: food.name, quantity });
+      }
+    });
 
-  //     // Increment the count based on the gender of the user
-  //     if (gender === "male") {
-  //       maleFoods += quantity;
-  //     } else if (gender === "female") {
-  //       femaleFoods += quantity;
-  //     }
-  //   });
+    // Convert the map values to an array
+    return Object.values(userOrderMap);
+  };
 
-  //   return { summary, totalFoods, totalPrice, maleFoods, femaleFoods };
-  // };
   const calculateFoodSummary = (orders) => {
     const summary = {};
     const maleSummary = {};
@@ -85,7 +77,6 @@ function FoodSummary() {
           maleSummary[food._id] = quantity;
         }
         totalMaleFoods += quantity;
-        // console.log(summary);
       }
 
       if (user && user.gender === "female") {
@@ -133,90 +124,36 @@ function FoodSummary() {
           </tr>
         </tbody>
       </Table>
+
+      <div className="text-center">
+        <h2>User Orders</h2>
+        <Table striped bordered responsive>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Orders</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userOrders.map((userOrder, index) => (
+              <tr key={index}>
+                <td>{userOrder.name}</td>
+                <td>
+                  <ul>
+                    {userOrder.orders.map((order, index) => (
+                      <li key={index}>
+                        {order.food}: {order.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 }
 
 export default FoodSummary;
-
-// import { useState, useEffect } from "react";
-// import axios from "axios";
-// import { Table } from "react-bootstrap";
-
-// function FoodSummary() {
-//   const [foodSummary, setFoodSummary] = useState([]);
-//   const [show, setShow] = useState(false);
-
-//   useEffect(() => {
-//     // Fetch order data for the current date from the backend server
-//     // const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-//     // console.log(currentDate);
-//     axios
-//       .get(`${process.env.REACT_APP_API_URL}/api/orders`)
-//       .then((response) => {
-//         const orders = response.data;
-//         const summary = calculateFoodSummary(orders);
-//         setFoodSummary(summary);
-//         setShow(true);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching order data:", error);
-//       });
-//   }, []);
-
-//   const calculateFoodSummary = (orders) => {
-//     const summary = {};
-//     let totalFoods = 0;
-//     let totalPrice = 0;
-
-//     orders.forEach((order) => {
-//       const { food, quantity } = order;
-//       if (summary[food._id]) {
-//         summary[food._id].quantity += quantity;
-//         summary[food._id].totalPrice += food.price * quantity;
-//       } else {
-//         summary[food._id] = {
-//           food: food.name,
-//           quantity,
-//           totalPrice: food.price * quantity,
-//         };
-//       }
-//       totalFoods += quantity;
-//       totalPrice += food.price;
-//     });
-
-//     return { summary, totalFoods, totalPrice };
-//   };
-
-//   return (
-//     <div className="text-center">
-//       <h2>Food Summary</h2>
-//       <Table bordered responsive>
-//         <thead>
-//           <tr>
-//             <th>Food</th>
-//             <th>No. of Foods</th>
-//             <th>Total Price</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {show &&
-//             Object.values(foodSummary.summary).map((item, index) => (
-//               <tr key={index}>
-//                 <td>{item.food}</td>
-//                 <td>{item.quantity}</td>
-//                 <td>{item.totalPrice}</td>
-//               </tr>
-//             ))}
-//           <tr>
-//             <td className="font-weight-bold">Total </td>
-//             <td className="font-weight-bold"> {foodSummary.totalFoods}</td>
-//             <td className="font-weight-bold"> {foodSummary.totalPrice}</td>
-//           </tr>
-//         </tbody>
-//       </Table>
-//     </div>
-//   );
-// }
-
-// export default FoodSummary;

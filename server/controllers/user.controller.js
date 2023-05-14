@@ -9,14 +9,14 @@ const createUser = async (req, res) => {
     const existingUser = await User.findOne({ index });
 
     if (existingUser) {
-      return res.status(200).json({ message: "User already exists", userId: existingUser._id });
+      return res.status(200).json({ message: "User already exists", user: existingUser });
     }
 
     // User does not exist, proceed to create and save the new user
     const newUser = new User({ name, index, gender });
     const savedUser = await newUser.save();
 
-    res.status(200).json({ message: "User created successfully", userId: savedUser._id });
+    res.status(200).json({ message: "User created successfully", user: savedUser });
   } catch (error) {
     res.status(500).json({ message: "Failed to create user", error: error.message });
   }
