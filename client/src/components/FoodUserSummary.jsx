@@ -36,31 +36,37 @@ function UserOrders() {
   };
 
   return (
-    <div className="text-center">
-      <h2>{user.name} Orders</h2>
-      <Table bordered responsive>
-        <thead>
-          <tr>
-            <th>Food</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order._id}>
-              <td>{order.food.name}</td>
-              <td>{order.quantity}</td>
-              <td>
-                <Button variant="danger" onClick={() => handleDeleteOrder(order._id)}>
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </div>
+    <>
+      {orders.length ? (
+        <div className="text-center">
+          <h2>{user.name} Orders</h2>
+          <Table bordered responsive>
+            <thead>
+              <tr>
+                <th>Food</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order.food.name}</td>
+                  <td>{order.quantity}</td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDeleteOrder(order._id)}>
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      ) : (
+        <h5 className="text-center mt-4">No Orders Yet</h5>
+      )}
+    </>
   );
 }
 

@@ -49,33 +49,39 @@ function UserOrdersTable() {
   };
 
   return (
-    <div className="text-center">
-      <h2>User Orders</h2>
-      <Table striped bordered responsive>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Orders</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userOrders.map((userOrder, index) => (
-            <tr key={index}>
-              <td>{userOrder.name}</td>
-              <td>
-                <ul>
-                  {userOrder.orders.map((order, index) => (
-                    <li key={index}>
-                      {order.food}: {order.quantity}
-                    </li>
-                  ))}
-                </ul>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </div>
+    <>
+      {userOrders.length ? (
+        <div className="text-center">
+          <h2>User Orders</h2>
+          <Table striped bordered responsive>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Orders</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userOrders.map((userOrder, index) => (
+                <tr key={index}>
+                  <td>{userOrder.name}</td>
+                  <td>
+                    <ul>
+                      {userOrder.orders.map((order, index) => (
+                        <li key={index}>
+                          {order.food}: {order.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
