@@ -93,6 +93,7 @@ function FoodMenu({ tab }) {
   return (
     <div className="text-center">
       <h2>Food Menu</h2>
+
       <Table striped bordered responsive>
         <thead>
           <tr>
@@ -121,16 +122,18 @@ function FoodMenu({ tab }) {
         </tbody>
       </Table>
 
-      <div className="row">
-        <div className="col-6">
-          <h4>Total Price: Rs.{totalPrice}</h4>
-        </div>
+      <div class="p-1 bg-light text-dark">
+        <div className="row">
+          <div className="col-6">
+            <h4>Total Price: Rs.{totalPrice}</h4>
+          </div>
 
-        <div className="col-6">
-          <Button variant="warning" onClick={handleOrderSubmit}>
-            Submit Order
-          </Button>
-          <ToastContainer />
+          <div className="col-6">
+            <Button variant="warning" onClick={handleOrderSubmit}>
+              Submit Order
+            </Button>
+            <ToastContainer />
+          </div>
         </div>
       </div>
     </div>
