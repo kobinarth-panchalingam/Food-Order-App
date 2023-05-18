@@ -32,41 +32,72 @@ const getOrders = async (req, res) => {
   }
 };
 
-const getOrdersByDate = async (req, res) => {
-  try {
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+// const getOrdersByDate = async (req, res) => {
+//   try {
+//     const currentDate = new Date();
+//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
 
-    const orders = await Order.find({
-      date: { $gte: startDate, $lt: endDate },
+//     const orders = await Order.find({
+//       date: { $gte: startDate, $lt: endDate },
+//     })
+//       .populate("food")
+//       .populate("user");
+
+//     res.json(orders);
+//   } catch (error) {
+//     console.error("Error fetching orders by date:", error);
+//     res.status(500).json({ error: "Failed to fetch orders by date" });
+//   }
+// };
+
+// const getOrdersByUser = async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+//     const currentDate = new Date();
+//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+
+//     const orders = await Order.find({
+//       user: userId,
+//       date: { $gte: startDate, $lt: endDate },
+//     }).populate("food");
+
+//     res.json(orders);
+//   } catch (error) {
+//     console.error("Error fetching orders by user:", error);
+//     res.status(500).json({ error: "Failed to fetch orders by user" });
+//   }
+// };
+
+const getUnfinishedOrders = async (req, res) => {
+  try {
+    const unfinishedOrders = await Order.find({
+      isFinished: false,
     })
       .populate("food")
       .populate("user");
 
-    res.json(orders);
+    res.json(unfinishedOrders);
   } catch (error) {
-    console.error("Error fetching orders by date:", error);
-    res.status(500).json({ error: "Failed to fetch orders by date" });
+    console.error("Error fetching unfinished orders:", error);
+    res.status(500).json({ error: "Failed to fetch unfinished orders" });
   }
 };
 
-const getOrdersByUser = async (req, res) => {
+const getUnfinishedOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const currentDate = new Date();
-    const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
 
-    const orders = await Order.find({
+    const unfinishedOrders = await Order.find({
       user: userId,
-      date: { $gte: startDate, $lt: endDate },
+      isFinished: false,
     }).populate("food");
 
-    res.json(orders);
+    res.json(unfinishedOrders);
   } catch (error) {
-    console.error("Error fetching orders by user:", error);
-    res.status(500).json({ error: "Failed to fetch orders by user" });
+    console.error("Error fetching unfinished orders by user:", error);
+    res.status(500).json({ error: "Failed to fetch unfinished orders by user" });
   }
 };
 
@@ -86,7 +117,7 @@ const deleteOrder = async (req, res) => {
 module.exports = {
   createOrder,
   getOrders,
-  getOrdersByDate,
-  getOrdersByUser,
+  getUnfinishedOrders,
+  getUnfinishedOrdersByUser,
   deleteOrder,
 };

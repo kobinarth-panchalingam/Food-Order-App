@@ -122,7 +122,7 @@ function FoodMenu({ tab }) {
         </tbody>
       </Table>
 
-      <div class="p-1 bg-light text-dark">
+      <div className="p-1 bg-light text-dark">
         <div className="row">
           <div className="col-6">
             <h4>Total Price: Rs.{totalPrice}</h4>
