@@ -6,7 +6,6 @@ import LocalStorageService from "../utils/LocalStorageService";
 function UserOrders() {
   const [orders, setOrders] = useState([]);
   const user = JSON.parse(LocalStorageService.getItem("user"));
-  // const name = LocalStorageService.getItem("userName");
 
   useEffect(() => {
     // Fetch user-specific orders from backend server
@@ -14,24 +13,32 @@ function UserOrders() {
       .get(`${process.env.REACT_APP_API_URL}/api/orders/user/${user._id}`)
       .then((response) => {
         setOrders(response.data);
+        console.log(orders);
       })
       .catch((error) => {
         console.error("Error fetching user orders:", error);
       });
   }, [user._id]);
 
-  const handleDeleteOrder = (orderId) => {
-    // Send delete request to backend server
+  const handleDeleteFoodItem = (orderId, foodId) => {
+    // Send delete request to the backend server
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}/food/${foodId}`)
       .then((response) => {
-        // Handle successful order deletion
-        console.log("Order deleted successfully:", response.data);
-        // Remove the deleted order from the state
-        setOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+        // Handle successful food item deletion
+        console.log("Food item deleted successfully:", response.data);
+        // Update the state to remove the deleted food item
+        setOrders((prevOrders) =>
+          prevOrders.map((order) => {
+            if (order._id === orderId) {
+              order.orderList = order.orderList.filter((item) => item._id !== foodId);
+            }
+            return order;
+          })
+        );
       })
       .catch((error) => {
-        console.error("Error deleting order:", error);
+        console.error("Error deleting food item:", error);
       });
   };
 
@@ -49,17 +56,19 @@ function UserOrders() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order.food.name}</td>
-                  <td>{order.quantity}</td>
-                  <td>
-                    <Button variant="danger" onClick={() => handleDeleteOrder(order._id)}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {orders.map((order) =>
+                order.orderList.map((foodItem) => (
+                  <tr key={foodItem._id}>
+                    <td>{foodItem.food.name}</td>
+                    <td>{foodItem.quantity}</td>
+                    <td>
+                      <Button variant="danger" onClick={() => handleDeleteFoodItem(order._id, foodItem._id)}>
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </Table>
         </div>

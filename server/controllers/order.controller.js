@@ -5,17 +5,43 @@ const createOrder = async (req, res) => {
   try {
     const { userId, orderList } = req.body;
 
-    // Create an array of order documents
-    const orders = orderList.map((order) => ({
-      user: userId,
-      food: order._id,
-      quantity: order.quantity,
-    }));
+    // Check if there are any unfinished orders for the user
+    const unfinishedOrder = await Order.findOne({ user: userId, isFinished: false });
 
-    // Insert multiple orders into the database
-    const result = await Order.insertMany(orders);
+    if (unfinishedOrder) {
+      // Add the new order items to the existing order list
+      unfinishedOrder.orderList.push(
+        ...orderList.map((orderItem) => ({
+          food: orderItem._id,
+          quantity: orderItem.quantity,
+        }))
+      );
 
-    res.status(201).json({ success: true, result });
+      // Save the updated unfinished order
+      await unfinishedOrder.save();
+
+      res.status(200).json({ success: true, result: unfinishedOrder });
+    } else {
+      // Find the maximum orderNumber value in the database
+      const maxOrderNumber = await Order.findOne().sort({ orderNumber: -1 }).limit(1).select("orderNumber").lean();
+
+      const nextOrderNumber = maxOrderNumber ? maxOrderNumber.orderNumber + 1 : 1;
+
+      // Create a new order document
+      const order = new Order({
+        user: userId,
+        orderList: orderList.map((orderItem) => ({
+          food: orderItem._id,
+          quantity: orderItem.quantity,
+        })),
+        orderNumber: nextOrderNumber,
+      });
+
+      // Save the order document to the database
+      const result = await order.save();
+
+      res.status(201).json({ success: true, result });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Order creation failed" });
@@ -32,52 +58,13 @@ const getOrders = async (req, res) => {
   }
 };
 
-// const getOrdersByDate = async (req, res) => {
-//   try {
-//     const currentDate = new Date();
-//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-
-//     const orders = await Order.find({
-//       date: { $gte: startDate, $lt: endDate },
-//     })
-//       .populate("food")
-//       .populate("user");
-
-//     res.json(orders);
-//   } catch (error) {
-//     console.error("Error fetching orders by date:", error);
-//     res.status(500).json({ error: "Failed to fetch orders by date" });
-//   }
-// };
-
-// const getOrdersByUser = async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const currentDate = new Date();
-//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-
-//     const orders = await Order.find({
-//       user: userId,
-//       date: { $gte: startDate, $lt: endDate },
-//     }).populate("food");
-
-//     res.json(orders);
-//   } catch (error) {
-//     console.error("Error fetching orders by user:", error);
-//     res.status(500).json({ error: "Failed to fetch orders by user" });
-//   }
-// };
-
 const getUnfinishedOrders = async (req, res) => {
   try {
     const unfinishedOrders = await Order.find({
       isFinished: false,
     })
-      .populate("food")
+      .populate("orderList.food")
       .populate("user");
-
     res.json(unfinishedOrders);
   } catch (error) {
     console.error("Error fetching unfinished orders:", error);
@@ -92,8 +79,7 @@ const getUnfinishedOrdersByUser = async (req, res) => {
     const unfinishedOrders = await Order.find({
       user: userId,
       isFinished: false,
-    }).populate("food");
-
+    }).populate("orderList.food");
     res.json(unfinishedOrders);
   } catch (error) {
     console.error("Error fetching unfinished orders by user:", error);
@@ -103,14 +89,61 @@ const getUnfinishedOrdersByUser = async (req, res) => {
 
 const deleteOrder = async (req, res) => {
   try {
+    const { orderId, foodId } = req.params;
+
+    // Find the order by orderId
+    const order = await Order.findById(orderId);
+    console.log(foodId);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Find the index of the food item in the order's orderList
+    const foodIndex = order.orderList.findIndex((item) => item._id.toString() === foodId);
+
+    if (foodIndex === -1) {
+      return res.status(404).json({ error: "Food item not found in the order" });
+    }
+
+    // Remove the food item from the order's orderList
+    order.orderList.splice(foodIndex, 1);
+
+    // Save the updated order
+    await order.save();
+
+    res.json({ message: "Food item deleted successfully", order });
+  } catch (error) {
+    console.error("Error deleting food item:", error);
+    res.status(500).json({ error: "Failed to delete food item" });
+  }
+};
+
+const finishOrder = async (req, res) => {
+  try {
     const { orderId } = req.params;
 
-    await Order.findByIdAndDelete(orderId);
+    const order = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true });
+    console.log("fo", orderId);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
 
-    res.json({ message: "Order deleted successfully" });
+    res.json({ message: "Order finished successfully", order });
   } catch (error) {
-    console.error("Error deleting order:", error);
-    res.status(500).json({ error: "Failed to delete order" });
+    console.error("Error finishing order:", error);
+    res.status(500).json({ error: "Failed to finish order" });
+  }
+};
+
+const getCompletedOrdersByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Order.find({ user: userId, isFinished: true }).sort({ updatedAt: -1 }).populate("orderList.food");
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching completed orders" });
   }
 };
 
@@ -120,4 +153,6 @@ module.exports = {
   getUnfinishedOrders,
   getUnfinishedOrdersByUser,
   deleteOrder,
+  finishOrder,
+  getCompletedOrdersByUser,
 };

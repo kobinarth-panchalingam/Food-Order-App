@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import LocalStorageService from "../utils/LocalStorageService";
 
 function UserOrdersTable() {
   const [userOrders, setUserOrders] = useState([]);
+  const user = JSON.parse(LocalStorageService.getItem("user"));
 
   useEffect(() => {
     axios
@@ -11,6 +13,7 @@ function UserOrdersTable() {
       .then((response) => {
         const userOrders = getUserOrders(response.data);
         setUserOrders(userOrders);
+        console.log(response);
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
@@ -18,34 +21,56 @@ function UserOrdersTable() {
   }, []);
 
   const getUserOrders = (orders) => {
-    // Create a map to store user orders
     const userOrderMap = {};
 
     orders.forEach((order) => {
-      const { user, food, quantity } = order;
+      const { user, orderList, _id } = order;
 
-      if (!userOrderMap[user.name]) {
-        // If the user is not in the map, create an entry for them
-        userOrderMap[user.name] = {
-          name: user.name,
-          orders: [{ food: food.name, quantity }],
-        };
-      } else {
-        // If the user is already in the map, check if the food already exists in their orders
-        const existingOrder = userOrderMap[user.name].orders.find((order) => order.food === food.name);
+      const { name } = user;
 
-        if (existingOrder) {
-          // If the food already exists, add the quantity to the existing order
-          existingOrder.quantity += quantity;
+      orderList.forEach((orderItem) => {
+        const { food, quantity } = orderItem;
+
+        if (!userOrderMap[name]) {
+          userOrderMap[name] = {
+            _id,
+            name,
+            orders: [{ food: food.name, quantity }],
+          };
         } else {
-          // If the food doesn't exist, add a new order
-          userOrderMap[user.name].orders.push({ food: food.name, quantity });
+          const existingOrder = userOrderMap[name].orders.find((order) => order.food === food.name);
+
+          if (existingOrder) {
+            existingOrder.quantity += quantity;
+          } else {
+            userOrderMap[name].orders.push({ food: food.name, quantity });
+          }
         }
-      }
+      });
     });
 
-    // Convert the map values to an array
     return Object.values(userOrderMap);
+  };
+
+  const handleFinishOrder = (orderId) => {
+    axios
+      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`)
+      .then(() => {
+        // Fetch the updated user orders after marking the order as finished
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/api/orders`)
+          .then((response) => {
+            const updatedUserOrders = getUserOrders(response.data);
+            setUserOrders(updatedUserOrders);
+            console.log("Order finished successfully");
+          })
+          .catch((error) => {
+            console.error("Error fetching order data:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error finishing order:", error);
+      });
   };
 
   return (
@@ -72,6 +97,11 @@ function UserOrdersTable() {
                         </li>
                       ))}
                     </ul>
+                  </td>
+                  <td>
+                    <Button variant="success" disabled={user.role === "user"} onClick={() => handleFinishOrder(userOrder._id)}>
+                      Finish
+                    </Button>
                   </td>
                 </tr>
               ))}
