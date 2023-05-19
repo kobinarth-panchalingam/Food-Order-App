@@ -3,17 +3,20 @@ const Order = require("../models/order.model");
 // Controller to create a new order
 const createOrder = async (req, res) => {
   try {
-    const { userId, orderList } = req.body;
+    const { userId, orderList, orderNumber } = req.body;
 
-    // Create an array of order documents
-    const orders = orderList.map((order) => ({
+    // Create an order document
+    const order = new Order({
       user: userId,
-      food: order._id,
-      quantity: order.quantity,
-    }));
+      orderList: orderList.map((orderItem) => ({
+        food: orderItem._id,
+        quantity: orderItem.quantity,
+      })),
+      orderNumber: orderNumber,
+    });
 
-    // Insert multiple orders into the database
-    const result = await Order.insertMany(orders);
+    // Save the order document to the database
+    const result = await order.save();
 
     res.status(201).json({ success: true, result });
   } catch (error) {
@@ -31,44 +34,6 @@ const getOrders = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-// const getOrdersByDate = async (req, res) => {
-//   try {
-//     const currentDate = new Date();
-//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-
-//     const orders = await Order.find({
-//       date: { $gte: startDate, $lt: endDate },
-//     })
-//       .populate("food")
-//       .populate("user");
-
-//     res.json(orders);
-//   } catch (error) {
-//     console.error("Error fetching orders by date:", error);
-//     res.status(500).json({ error: "Failed to fetch orders by date" });
-//   }
-// };
-
-// const getOrdersByUser = async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const currentDate = new Date();
-//     const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-//     const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-
-//     const orders = await Order.find({
-//       user: userId,
-//       date: { $gte: startDate, $lt: endDate },
-//     }).populate("food");
-
-//     res.json(orders);
-//   } catch (error) {
-//     console.error("Error fetching orders by user:", error);
-//     res.status(500).json({ error: "Failed to fetch orders by user" });
-//   }
-// };
 
 const getUnfinishedOrders = async (req, res) => {
   try {

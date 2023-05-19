@@ -7,18 +7,23 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    food: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Food",
-      required: true,
-    },
-    quantity: {
+    orderList: [
+      {
+        food: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Food",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    orderNumber: {
       type: Number,
-      default: 0,
-    },
-    date: {
-      type: Date,
-      default: Date.now,
+      default: 1,
+      required: true,
     },
     isFinished: {
       type: Boolean,
