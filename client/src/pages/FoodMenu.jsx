@@ -102,6 +102,7 @@ function FoodMenu() {
     onSwipedRight: () => {
       // Handle swipe right to navigate to the previous tab
     },
+    swipeDuration: 250,
   });
 
   return (
