@@ -36,13 +36,17 @@ function PastOrders() {
   return (
     <>
       <Container>
-        <Row>
-          {pastOrders.map((order) => (
-            <Col key={order._id} lg={4} md={6} sm={12} className="mb-4">
-              <OrderCard order={order} expanded={order.expanded} onToggleExpand={handleExpandOrder} />
-            </Col>
-          ))}
-        </Row>
+        {pastOrders.length ? (
+          <Row>
+            {pastOrders.map((order) => (
+              <Col key={order._id} lg={4} md={6} sm={12} className="mb-4">
+                <OrderCard order={order} expanded={order.expanded} onToggleExpand={handleExpandOrder} />
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <h4 className="text-center">No Past Orders</h4>
+        )}
       </Container>
     </>
   );

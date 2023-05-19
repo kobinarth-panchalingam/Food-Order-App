@@ -92,7 +92,7 @@ function FoodMenu({ tab }) {
 
   return (
     <div className="text-center">
-      <h2>Food Menu</h2>
+      <h3>Food Menu</h3>
 
       <Table striped bordered responsive>
         <thead>

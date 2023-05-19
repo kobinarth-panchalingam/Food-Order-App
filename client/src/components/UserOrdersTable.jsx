@@ -77,7 +77,7 @@ function UserOrdersTable() {
     <>
       {userOrders.length ? (
         <div className="text-center">
-          <h2>User Orders</h2>
+          <h3>User Orders</h3>
           <Table striped bordered responsive>
             <thead>
               <tr>
