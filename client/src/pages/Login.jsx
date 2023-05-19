@@ -63,7 +63,7 @@ const Login = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index, gender });
       LocalStorageService.setItem("user", JSON.stringify(response.data.user));
-      navigate("/home");
+      navigate("/foodMenu");
     } catch (error) {
       console.error(error);
     }

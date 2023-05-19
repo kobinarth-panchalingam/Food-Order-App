@@ -1,3 +1,6 @@
 .selected-row {
   background-color: #e2f0ff;
 }
+.full-height {
+  height: 100vh;
+}

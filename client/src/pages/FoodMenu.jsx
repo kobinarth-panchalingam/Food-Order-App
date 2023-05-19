@@ -5,11 +5,15 @@ import "../styles/style.css";
 import LocalStorageService from "../utils/LocalStorageService";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import NavBar from "../components/NavBar";
+import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
 
-function FoodMenu({ tab }) {
+function FoodMenu() {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const user = JSON.parse(LocalStorageService.getItem("user"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch food data from backend server
@@ -90,53 +94,68 @@ function FoodMenu({ tab }) {
     setFoods(resetFoods);
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      // Handle swipe left to navigate to the next tab
+      navigate("/currentOrder");
+    },
+    onSwipedRight: () => {
+      // Handle swipe right to navigate to the previous tab
+    },
+  });
+
   return (
-    <div className="text-center">
-      <h3>Food Menu</h3>
+    <>
+      <div className="full-height" {...swipeHandlers}>
+        <NavBar activeTab={"tab1"} />
+        <div className="text-center">
+          <h3>Food Menu</h3>
 
-      <Table striped bordered responsive>
-        <thead>
-          <tr>
-            <th>Food</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {foods.map((food) => (
-            <tr key={food._id} className={food.quantity > 0 ? "selected-row" : ""}>
-              <td>
-                <div>{food.name}</div>
-                <div className="text-secondary">Price: Rs.{food.price}</div>
-              </td>
-              <td>
-                <Button variant="danger" onClick={() => handleDecrement(food)} disabled={food.quantity === 0}>
-                  -
+          <Table striped bordered responsive>
+            <thead>
+              <tr>
+                <th>Food</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {foods.map((food) => (
+                <tr key={food._id} className={food.quantity > 0 ? "selected-row" : ""}>
+                  <td>
+                    <div>{food.name}</div>
+                    <div className="text-secondary">Price: Rs.{food.price}</div>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDecrement(food)} disabled={food.quantity === 0}>
+                      -
+                    </Button>
+                    <span className="mx-2">{food.quantity}</span>
+                    <Button variant="success" onClick={() => handleIncrement(food)}>
+                      +
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          <div className="p-1 bg-light text-dark">
+            <div className="row">
+              <div className="col-6">
+                <h4>Total Price: Rs.{totalPrice}</h4>
+              </div>
+
+              <div className="col-6">
+                <Button variant="warning" onClick={handleOrderSubmit}>
+                  Submit Order
                 </Button>
-                <span className="mx-2">{food.quantity}</span>
-                <Button variant="success" onClick={() => handleIncrement(food)}>
-                  +
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      <div className="p-1 bg-light text-dark">
-        <div className="row">
-          <div className="col-6">
-            <h4>Total Price: Rs.{totalPrice}</h4>
-          </div>
-
-          <div className="col-6">
-            <Button variant="warning" onClick={handleOrderSubmit}>
-              Submit Order
-            </Button>
-            <ToastContainer />
+                <ToastContainer />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
