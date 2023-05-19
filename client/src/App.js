@@ -4,7 +4,7 @@ import UserOrders from "./pages/FoodUserSummary";
 import FoodSummary from "./pages/FoodSummary";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FoodMenu from "./pages/FoodMenu";
-import PastOrders from "./components/PastOrders";
+import PastOrders from "./pages/PastOrders";
 
 function App() {
   return (

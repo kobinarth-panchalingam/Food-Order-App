@@ -17,13 +17,13 @@ function NavBar({ activeTab }) {
           <Nav.Link as={Link} to="/foodMenu" eventKey="tab1">
             Order Here
           </Nav.Link>
-          <Nav.Link as={Link} to="/currentOrder" eventKey="tab3">
+          <Nav.Link as={Link} to="/currentOrder" eventKey="tab2">
             Current Order
           </Nav.Link>
-          <Nav.Link as={Link} to="/allOrders" eventKey="tab2">
+          <Nav.Link as={Link} to="/allOrders" eventKey="tab3">
             All Orders
           </Nav.Link>
-          <Nav.Link as={Link} to="/pastOrders" eventKey="tab4">
+          <Nav.Link as={Link} to="/pastOrders " eventKey="tab4">
             Past Orders
           </Nav.Link>
         </Nav>
