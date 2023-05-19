@@ -33,6 +33,7 @@ mongoose
   });
 
 const Food = require("./models/food.model");
+const User = require("./models/user.model");
 
 const foodData = [
   {
@@ -86,7 +87,32 @@ const seedFoodData = async () => {
   }
 };
 
+const createAdmin = async () => {
+  try {
+    const newUser = new User({ name: "Kobinarth", index: 200307, gender: "male", role: "admin" });
+    const savedUser = await newUser.save();
+    console.log(savedUser);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateAllUsersToUserRole = async () => {
+  try {
+    // Update all users to "user" role
+    await User.updateMany({}, { role: "user" });
+
+    console.log("All users updated to 'user' role successfully.");
+  } catch (error) {
+    console.error("Error updating users:", error);
+  }
+};
+
+// Call the function to update all users to "user" role
+// updateAllUsersToUserRole();
+
 // seedFoodData();
+// createAdmin();
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");

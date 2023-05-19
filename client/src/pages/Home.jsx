@@ -4,6 +4,7 @@ import FoodMenu from "../components/FoodMenu";
 import FoodSummary from "../components/FoodSummary";
 import UserOrders from "../components/FoodUserSummary";
 import "../styles/style.css";
+import PastOrders from "../components/PastOrders";
 
 function App() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -20,8 +21,9 @@ function App() {
         </Navbar.Brand>
         <Nav fill variant="tabs" activeKey={activeTab} onSelect={handleTabSelect}>
           <Nav.Link eventKey="tab1">Order Here</Nav.Link>
-          <Nav.Link eventKey="tab3">Your Order</Nav.Link>
+          <Nav.Link eventKey="tab3">Current Order</Nav.Link>
           <Nav.Link eventKey="tab2">All Orders</Nav.Link>
+          <Nav.Link eventKey="tab4">Past Orders</Nav.Link>
         </Nav>
       </Navbar>
 
@@ -38,6 +40,12 @@ function App() {
       {activeTab === "tab3" && (
         <div>
           <UserOrders />
+        </div>
+      )}
+
+      {activeTab === "tab4" && (
+        <div>
+          <PastOrders />
         </div>
       )}
     </>
