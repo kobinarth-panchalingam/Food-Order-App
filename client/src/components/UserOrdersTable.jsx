@@ -13,7 +13,6 @@ function UserOrdersTable() {
       .then((response) => {
         const userOrders = getUserOrders(response.data);
         setUserOrders(userOrders);
-        console.log(response);
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
