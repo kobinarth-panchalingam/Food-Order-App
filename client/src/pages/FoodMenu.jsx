@@ -5,6 +5,7 @@ import "../styles/style.css";
 import LocalStorageService from "../utils/LocalStorageService";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import NavBar from "../components/NavBar";
 
 function FoodMenu({ tab }) {
   const [foods, setFoods] = useState([]);
@@ -91,52 +92,55 @@ function FoodMenu({ tab }) {
   };
 
   return (
-    <div className="text-center">
-      <h3>Food Menu</h3>
+    <>
+      <NavBar activeTab={"tab1"} />
+      <div className="text-center">
+        <h3>Food Menu</h3>
 
-      <Table striped bordered responsive>
-        <thead>
-          <tr>
-            <th>Food</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {foods.map((food) => (
-            <tr key={food._id} className={food.quantity > 0 ? "selected-row" : ""}>
-              <td>
-                <div>{food.name}</div>
-                <div className="text-secondary">Price: Rs.{food.price}</div>
-              </td>
-              <td>
-                <Button variant="danger" onClick={() => handleDecrement(food)} disabled={food.quantity === 0}>
-                  -
-                </Button>
-                <span className="mx-2">{food.quantity}</span>
-                <Button variant="success" onClick={() => handleIncrement(food)}>
-                  +
-                </Button>
-              </td>
+        <Table striped bordered responsive>
+          <thead>
+            <tr>
+              <th>Food</th>
+              <th>Quantity</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {foods.map((food) => (
+              <tr key={food._id} className={food.quantity > 0 ? "selected-row" : ""}>
+                <td>
+                  <div>{food.name}</div>
+                  <div className="text-secondary">Price: Rs.{food.price}</div>
+                </td>
+                <td>
+                  <Button variant="danger" onClick={() => handleDecrement(food)} disabled={food.quantity === 0}>
+                    -
+                  </Button>
+                  <span className="mx-2">{food.quantity}</span>
+                  <Button variant="success" onClick={() => handleIncrement(food)}>
+                    +
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
 
-      <div className="p-1 bg-light text-dark">
-        <div className="row">
-          <div className="col-6">
-            <h4>Total Price: Rs.{totalPrice}</h4>
-          </div>
+        <div className="p-1 bg-light text-dark">
+          <div className="row">
+            <div className="col-6">
+              <h4>Total Price: Rs.{totalPrice}</h4>
+            </div>
 
-          <div className="col-6">
-            <Button variant="warning" onClick={handleOrderSubmit}>
-              Submit Order
-            </Button>
-            <ToastContainer />
+            <div className="col-6">
+              <Button variant="warning" onClick={handleOrderSubmit}>
+                Submit Order
+              </Button>
+              <ToastContainer />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

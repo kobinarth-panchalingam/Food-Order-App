@@ -3,6 +3,7 @@ import axios from "axios";
 import { Row, Col, Container } from "react-bootstrap";
 import LocalStorageService from "../utils/LocalStorageService";
 import OrderCard from "./OrderCard";
+import NavBar from "./NavBar";
 
 function PastOrders() {
   const [pastOrders, setPastOrders] = useState([]);
@@ -35,6 +36,7 @@ function PastOrders() {
 
   return (
     <>
+      <NavBar activeTab={"tab4"} />
       <Container>
         {pastOrders.length ? (
           <Row>

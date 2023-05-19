@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
 import LocalStorageService from "../utils/LocalStorageService";
+import NavBar from "../components/NavBar";
 
 function UserOrders() {
   const [orders, setOrders] = useState([]);
@@ -13,7 +14,6 @@ function UserOrders() {
       .get(`${process.env.REACT_APP_API_URL}/api/orders/user/${user._id}`)
       .then((response) => {
         setOrders(response.data);
-        console.log(orders);
       })
       .catch((error) => {
         console.error("Error fetching user orders:", error);
@@ -44,6 +44,7 @@ function UserOrders() {
 
   return (
     <>
+      <NavBar activeTab={"tab3"} />
       {orders.length ? (
         <div className="text-center">
           <h2>{user.name} Orders</h2>
