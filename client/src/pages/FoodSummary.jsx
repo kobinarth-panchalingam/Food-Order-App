@@ -15,6 +15,7 @@ function FoodSummary() {
       // Handle swipe right to navigate to the previous tab
       navigate("/currentOrder");
     },
+    swipeDuration: 250,
   });
   return (
     <>
