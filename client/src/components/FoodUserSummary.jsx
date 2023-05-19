@@ -73,7 +73,7 @@ function UserOrders() {
           </Table>
         </div>
       ) : (
-        <h5 className="text-center mt-4">No Orders Yet</h5>
+        <h3 className="text-center">No Orders Yet</h3>
       )}
     </>
   );

@@ -71,7 +71,7 @@ function FoodSummaryTable() {
 
   return (
     <div className="text-center">
-      <h2>Food Summary</h2>
+      <h3>Food Summary</h3>
       <Table striped bordered responsive>
         <thead>
           <tr>
