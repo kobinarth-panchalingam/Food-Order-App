@@ -21,7 +21,7 @@ function UserOrders() {
       .catch((error) => {
         console.error("Error fetching user orders:", error);
       });
-  }, [user._id]);
+  }, [orders]);
 
   const handleDeleteFoodItem = (orderId, foodId) => {
     // Send delete request to the backend server

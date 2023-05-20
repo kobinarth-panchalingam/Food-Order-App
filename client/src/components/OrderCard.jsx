@@ -31,19 +31,17 @@ const OrderCard = ({ order, expanded, onToggleExpand }) => {
       <Card.Body onClick={handleToggleExpand}>
         {expanded ? (
           <>
-            <Card.Text>
-              <strong>Ordered Date:</strong> {formattedDateTime}
-              <br />
-              <strong>Ordered Foods:</strong>
-              <ul>
-                {orderList.map((orderItem) => (
-                  <li key={orderItem._id}>
-                    {orderItem.food.name} - {orderItem.quantity}
-                  </li>
-                ))}
-              </ul>
-              <strong>Total Price:</strong> Rs. {calculateTotalPrice()}
-            </Card.Text>
+            <strong>Ordered Date:</strong> {formattedDateTime}
+            <br />
+            <strong>Ordered Foods:</strong>
+            <ul>
+              {orderList.map((orderItem) => (
+                <li key={orderItem._id}>
+                  {orderItem.food.name} - {orderItem.quantity}
+                </li>
+              ))}
+            </ul>
+            <strong>Total Price:</strong> Rs. {calculateTotalPrice()}
             {/* Additional expanded content goes here */}
           </>
         ) : (
