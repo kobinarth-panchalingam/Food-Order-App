@@ -19,7 +19,7 @@ function FoodSummary() {
   });
   return (
     <>
-      <div className="full-height container" {...swipeHandlers}>
+      <div className="full-height container-fluid" {...swipeHandlers}>
         <NavBar activeTab={"tab3"} />
         <FoodSummaryTable />
         <UserOrdersTable />

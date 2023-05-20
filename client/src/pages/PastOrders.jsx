@@ -50,7 +50,7 @@ function PastOrders() {
 
   return (
     <>
-      <div className="full-height container" {...swipeHandlers}>
+      <div className="full-height container-fluid" {...swipeHandlers}>
         <NavBar activeTab={"tab4"} />
         {pastOrders.length ? (
           <Row>

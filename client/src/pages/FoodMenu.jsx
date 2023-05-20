@@ -107,7 +107,7 @@ function FoodMenu() {
 
   return (
     <>
-      <div className="full-height container" {...swipeHandlers}>
+      <div className="full-height container-fluid" {...swipeHandlers}>
         <NavBar activeTab={"tab1"} />
         <div className="text-center">
           <h3>Food Menu</h3>
