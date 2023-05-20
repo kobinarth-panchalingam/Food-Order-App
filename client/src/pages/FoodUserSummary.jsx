@@ -59,7 +59,7 @@ function UserOrders() {
 
   return (
     <>
-      <div className="full-height" {...swipeHandlers}>
+      <div className="full-height container" {...swipeHandlers}>
         <NavBar activeTab={"tab2"} />
         {orders.length ? (
           <div className="text-center">
