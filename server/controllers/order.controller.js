@@ -93,7 +93,6 @@ const deleteOrder = async (req, res) => {
 
     // Find the order by orderId
     const order = await Order.findById(orderId);
-    console.log(foodId);
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
@@ -107,6 +106,13 @@ const deleteOrder = async (req, res) => {
 
     // Remove the food item from the order's orderList
     order.orderList.splice(foodIndex, 1);
+
+    // Check if the orderList is empty
+    if (order.orderList.length === 0) {
+      // If orderList is empty, delete the entire document from the collection
+      await Order.findByIdAndDelete(orderId);
+      return res.json({ message: "Order deleted successfully" });
+    }
 
     // Save the updated order
     await order.save();
