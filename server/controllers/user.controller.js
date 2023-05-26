@@ -1,9 +1,9 @@
 const User = require("../models/user.model");
+const { fetchMemberEmails } = require("../splitwise_api/splitwise");
 
 // Controller to create a new user
 const createUser = async (req, res) => {
-  const { name, index, gender } = req.body;
-
+  const { name, index, gender, splitwiseEmail } = req.body;
   try {
     // Check if the user already exists
     const existingUser = await User.findOne({ index });
@@ -12,11 +12,18 @@ const createUser = async (req, res) => {
       return res.status(200).json({ message: "User already exists", user: existingUser });
     }
 
-    // User does not exist, proceed to create and save the new user
-    const newUser = new User({ name, index, gender });
-    const savedUser = await newUser.save();
-
-    res.status(200).json({ message: "User created successfully", user: savedUser });
+    // Check if the splitwiseEmail is in the memberEmails array
+    const memberEmails = await fetchMemberEmails();
+    const foundMember = memberEmails.find((member) => member.email === splitwiseEmail);
+    if (!foundMember) {
+      res.status(201).json({ message: "You are not a member of the group" });
+    } else {
+      // User does not exist, proceed to create and save the new user
+      const splitwiseId = foundMember.id;
+      const newUser = new User({ name, index, gender, splitwiseEmail, splitwiseId });
+      const savedUser = await newUser.save();
+      res.status(200).json({ message: "User created successfully", user: savedUser });
+    }
   } catch (error) {
     res.status(500).json({ message: "Failed to create user", error: error.message });
   }

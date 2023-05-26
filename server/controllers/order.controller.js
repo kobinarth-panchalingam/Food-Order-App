@@ -1,4 +1,5 @@
 const Order = require("../models/order.model");
+const { createDebt } = require("../splitwise_api/splitwise");
 
 // Controller to create a new order
 const createOrder = async (req, res) => {
@@ -128,11 +129,21 @@ const finishOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    const order = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true });
-    console.log("fo", orderId);
+    const order = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
+    let totalPrice = 0;
+    order.orderList.forEach((orderItem) => {
+      totalPrice += orderItem.food.price * orderItem.quantity;
+    });
+
+    // Create a description based on food names in the order list
+    const foodNames = order.orderList.map((item) => item.food.name);
+    const description = `${foodNames.join(", ")}`;
+
+    // Call the createDebt function with the necessary parameters
+    const result = await createDebt(order.user.splitwiseId, description, totalPrice);
 
     res.json({ message: "Order finished successfully", order });
   } catch (error) {
