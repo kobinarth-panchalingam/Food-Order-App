@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema(
       enum: ["male", "female"],
       required: true,
     },
+    splitwiseEmail: {
+      type: String,
+      unique: true,
+    },
+    splitwiseId: {
+      type: Number,
+    },
     role: {
       type: String,
       enum: ["user", "admin"], // Specify the allowed roles as an array

@@ -53,7 +53,7 @@ function UserOrdersTable() {
 
   const handleFinishOrder = (orderId) => {
     axios
-      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`)
+      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { to: user.splitwiseId })
       .then(() => {
         // Fetch the updated user orders after marking the order as finished
         axios
