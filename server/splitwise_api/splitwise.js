@@ -18,7 +18,7 @@ async function createDebt(to, description, amount) {
       });
       return debt;
     }
-    return;
+    return " ";
   } catch (error) {
     console.error(error);
     throw new Error("Failed to create debt");
