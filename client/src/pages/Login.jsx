@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch existing user based on the index number
+    // Fetch existing users based on the index number
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users?index=${index}`);
