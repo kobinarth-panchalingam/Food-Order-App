@@ -5,6 +5,7 @@ import { FiLogOut } from "react-icons/fi";
 import LocalStorageService from "../utils/LocalStorageService";
 
 function NavBar({ activeTab }) {
+  const user = JSON.parse(LocalStorageService.getItem("user"));
   const handleTabSelect = (tab) => {
     activeTab = tab;
   };
@@ -12,11 +13,6 @@ function NavBar({ activeTab }) {
   const handleLogout = () => {
     // Delete the user object from LocalStorageService
     LocalStorageService.removeItem("user");
-
-    // Perform any additional logout logic here
-
-    // Redirect to the login or home page
-    // Example: window.location.href = "/login";
     window.location.href = "/";
   };
 
@@ -33,9 +29,11 @@ function NavBar({ activeTab }) {
           <Nav.Link as={Link} to="/currentOrder" eventKey="tab2">
             Current Order
           </Nav.Link>
-          <Nav.Link as={Link} to="/allOrders" eventKey="tab3">
-            All Orders
-          </Nav.Link>
+          {user.role === "admin" && (
+            <Nav.Link as={Link} to="/allOrders" eventKey="tab3">
+              All Orders
+            </Nav.Link>
+          )}
           <Nav.Link as={Link} to="/pastOrders " eventKey="tab4">
             Past Orders
           </Nav.Link>
