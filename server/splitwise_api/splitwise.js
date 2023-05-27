@@ -8,7 +8,7 @@ const group_id = process.env.GROUP_ID;
 
 async function createDebt(to, description, amount) {
   try {
-    if (to !== process.env.FROM) {
+    if (to != process.env.FROM) {
       const debt = await sw.createDebt({
         from: process.env.FROM,
         to: to,
@@ -18,7 +18,7 @@ async function createDebt(to, description, amount) {
       });
       return debt;
     }
-    return " ";
+    return;
   } catch (error) {
     console.error(error);
     throw new Error("Failed to create debt");
