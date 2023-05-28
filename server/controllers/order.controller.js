@@ -76,7 +76,6 @@ const getUnfinishedOrders = async (req, res) => {
 const getUnfinishedOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
-
     const unfinishedOrders = await Order.find({
       user: userId,
       isFinished: false,
