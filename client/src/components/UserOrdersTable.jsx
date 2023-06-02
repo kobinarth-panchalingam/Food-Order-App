@@ -6,6 +6,7 @@ import LocalStorageService from "../utils/LocalStorageService";
 function UserOrdersTable() {
   const [userOrders, setUserOrders] = useState([]);
   const user = JSON.parse(LocalStorageService.getItem("user"));
+  const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
 
   useEffect(() => {
     axios
@@ -52,6 +53,13 @@ function UserOrdersTable() {
   };
 
   const handleFinishOrder = (orderId) => {
+    if (isFinishingOrder) {
+      // If finishing order API call is already in progress, return early
+      return;
+    }
+
+    setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
+
     axios
       .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { to: user.splitwiseId })
       .then(() => {
@@ -69,6 +77,9 @@ function UserOrdersTable() {
       })
       .catch((error) => {
         console.error("Error finishing order:", error);
+      })
+      .finally(() => {
+        setIsFinishingOrder(false); // Reset the flag after finishing order API call is complete
       });
   };
 
