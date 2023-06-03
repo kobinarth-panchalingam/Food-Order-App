@@ -70,8 +70,7 @@ function FoodSummaryTable() {
   };
 
   return (
-    <div className="text-center">
-      <h3>Food Summary</h3>
+    <div className="text-center my-3">
       <Table striped bordered responsive>
         <thead>
           <tr>

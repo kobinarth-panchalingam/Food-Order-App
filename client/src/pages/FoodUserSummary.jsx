@@ -63,7 +63,9 @@ function UserOrders() {
         <NavBar activeTab={"tab2"} />
         {orders.length ? (
           <div className="text-center">
-            <h2>{user.name} Orders</h2>
+            <h2 className="my-3" style={{ opacity: 0.7 }}>
+              Hi {user.name} 😉
+            </h2>
             <Table bordered responsive>
               <thead>
                 <tr>
@@ -90,7 +92,9 @@ function UserOrders() {
             </Table>
           </div>
         ) : (
-          <h3 className="text-center">No Orders Yet</h3>
+          <h3 className="text-center mt-5" style={{ opacity: 0.7 }}>
+            No Orders Yet
+          </h3>
         )}
       </div>
     </>

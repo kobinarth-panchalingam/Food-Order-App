@@ -87,12 +87,12 @@ function UserOrdersTable() {
     <>
       {userOrders.length ? (
         <div className="text-center">
-          <h3>User Orders</h3>
           <Table striped bordered responsive>
             <thead>
               <tr>
                 <th>User</th>
                 <th>Orders</th>
+                {user.role === "admin" && <th>Splitwise</th>}
               </tr>
             </thead>
             <tbody>
@@ -108,11 +108,13 @@ function UserOrdersTable() {
                       ))}
                     </ul>
                   </td>
-                  <td>
-                    <Button variant="success" disabled={user.role === "user"} onClick={() => handleFinishOrder(userOrder._id, index)}>
-                      Finish
-                    </Button>
-                  </td>
+                  {user.role === "admin" && (
+                    <td>
+                      <Button variant="success" onClick={() => handleFinishOrder(userOrder._id, index)}>
+                        Add
+                      </Button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

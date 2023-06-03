@@ -61,7 +61,9 @@ function PastOrders() {
             ))}
           </Row>
         ) : (
-          <h4 className="text-center">No Past Orders</h4>
+          <h4 className="text-center mt-5" style={{ opacity: 0.7 }}>
+            No Past Orders
+          </h4>
         )}
       </div>
     </>
