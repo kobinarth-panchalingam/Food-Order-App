@@ -127,6 +127,7 @@ const deleteOrder = async (req, res) => {
 const finishOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+    const { description } = req.body;
 
     const order = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
     if (!order) {
@@ -139,10 +140,11 @@ const finishOrder = async (req, res) => {
 
     // Create a description based on food names in the order list
     const foodNames = order.orderList.map((item) => item.food.name);
-    const description = `${foodNames.join(", ")}`;
+    const firstName = order.user.name.split(" ")[0];
+    const newDescription = `${firstName}-${description}`;
 
     // Call the createDebt function with the necessary parameters
-    const result = await createDebt(order.user.splitwiseId, description, totalPrice);
+    const result = await createDebt(order.user.splitwiseId, newDescription, totalPrice);
 
     res.json({ message: "Order finished successfully", order });
   } catch (error) {

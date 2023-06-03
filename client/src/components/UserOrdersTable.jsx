@@ -52,16 +52,16 @@ function UserOrdersTable() {
     return Object.values(userOrderMap);
   };
 
-  const handleFinishOrder = (orderId) => {
+  const handleFinishOrder = (orderId, index) => {
     if (isFinishingOrder) {
       // If finishing order API call is already in progress, return early
       return;
     }
 
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
-
+    const description = userOrders[index].orders.map((order) => ` ${order.food}-${order.quantity}`).join(", ");
     axios
-      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { to: user.splitwiseId })
+      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { description: description })
       .then(() => {
         // Fetch the updated user orders after marking the order as finished
         axios
@@ -109,7 +109,7 @@ function UserOrdersTable() {
                     </ul>
                   </td>
                   <td>
-                    <Button variant="success" disabled={user.role === "user"} onClick={() => handleFinishOrder(userOrder._id)}>
+                    <Button variant="success" disabled={user.role === "user"} onClick={() => handleFinishOrder(userOrder._id, index)}>
                       Finish
                     </Button>
                   </td>

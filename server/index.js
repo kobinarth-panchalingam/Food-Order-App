@@ -61,6 +61,10 @@ const foodData = [
     price: 180,
   },
   {
+    name: "Chapathi (2pcs)",
+    price: 310,
+  },
+  {
     name: "Shawarma",
     price: 150,
   },
@@ -72,6 +76,7 @@ const foodData = [
     name: "Naan Rotti",
     price: 140,
   },
+
   // Add more food items as needed
 ];
 
