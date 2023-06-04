@@ -1,0 +1,9 @@
+{
+	"Print to console": {
+		"prefix": "commit client",
+		"body": [
+			"git subtree push --prefix client heroku-client main')"
+		],
+		"description": "Log output to console"
+	}
+}

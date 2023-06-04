@@ -3,6 +3,7 @@ import FoodSummaryTable from "../components/FoodSummaryTable";
 import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import Guide from "../components/Guide";
 
 function FoodSummary() {
   const navigate = useNavigate();

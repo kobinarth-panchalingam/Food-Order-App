@@ -13,6 +13,7 @@ function NavBar({ activeTab }) {
   const handleLogout = () => {
     // Delete the user object from LocalStorageService
     LocalStorageService.removeItem("user");
+    LocalStorageService.removeItem("run");
     window.location.href = "/";
   };
 
@@ -23,19 +24,19 @@ function NavBar({ activeTab }) {
           Pick Me
         </Navbar.Brand> */}
         <Nav fill variant="tabs" activeKey={activeTab} onSelect={handleTabSelect}>
-          <Nav.Link as={Link} to="/foodMenu" eventKey="tab1">
+          <Nav.Link as={Link} to="/foodMenu" eventKey="tab1" className="order-here">
             Order Here
           </Nav.Link>
-          <Nav.Link as={Link} to="/currentOrder" eventKey="tab2">
+          <Nav.Link as={Link} to="/currentOrder" eventKey="tab2" className="current-order">
             Current Order
           </Nav.Link>
-          <Nav.Link as={Link} to="/allOrders" eventKey="tab3">
+          <Nav.Link as={Link} to="/allOrders" eventKey="tab3" className="all-orders">
             All Orders
           </Nav.Link>
-          <Nav.Link as={Link} to="/pastOrders " eventKey="tab4">
+          <Nav.Link as={Link} to="/pastOrders " eventKey="tab4" className="past-orders  ">
             Past Orders
           </Nav.Link>
-          <Nav.Link onClick={handleLogout}>
+          <Nav.Link onClick={handleLogout} className="logout">
             <FiLogOut />
           </Nav.Link>
         </Nav>

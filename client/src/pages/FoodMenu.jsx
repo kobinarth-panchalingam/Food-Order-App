@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import Guide from "../components/Guide";
 
 function FoodMenu() {
   const [foods, setFoods] = useState([]);
@@ -107,9 +108,10 @@ function FoodMenu() {
 
   return (
     <>
-      <div className="full-height container-fluid" {...swipeHandlers}>
+      <div className=" full-height container-fluid swipe-element" {...swipeHandlers}>
+        <Guide />
         <NavBar activeTab={"tab1"} />
-        <div className="text-center">
+        <div className="text-center ">
           <Table striped bordered responsive>
             <thead>
               <tr>
