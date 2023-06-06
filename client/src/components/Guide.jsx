@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { useNavigate } from "react-router-dom";
-import LocalStorageService from "../utils/LocalStorageService";
+import SessionStorageService from "../utils/SessionStorageService";
 
 const Guide = () => {
-  const run = LocalStorageService.getItem("run");
+  const run = SessionStorageService.getItem("run");
   const [runTutorial, setRunTutorial] = useState(!run);
   const [stepIndex, setStepIndex] = useState(0);
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ const Guide = () => {
       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       // Need to set our running state to false, so we can restart if we click start again.
-      LocalStorageService.setItem("run", true);
+      SessionStorageService.setItem("run", true);
     }
   };
 

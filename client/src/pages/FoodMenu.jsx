@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
 import "../styles/style.css";
-import LocalStorageService from "../utils/LocalStorageService";
+import SessionStorageService from "../utils/SessionStorageService";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import NavBar from "../components/NavBar";
@@ -13,7 +13,7 @@ import Guide from "../components/Guide";
 function FoodMenu() {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const user = JSON.parse(LocalStorageService.getItem("user"));
+  const user = JSON.parse(SessionStorageService.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {
