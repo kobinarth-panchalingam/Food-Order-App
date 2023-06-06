@@ -104,7 +104,7 @@ const Login = () => {
           <div className="row justify-content-center">
             <div className="card">
               <div className="card-body">
-                <h3 className="card-title">Login</h3>
+                <h3 className="card-title text-center mb-3">Login</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-floating mb-3 row">
                     <input
