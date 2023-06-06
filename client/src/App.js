@@ -10,19 +10,6 @@ import LocalStorageService from "./utils/LocalStorageService";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 
 function App() {
-  useEffect(() => {
-    const handleUnload = () => {
-      LocalStorageService.removeItem("user");
-      LocalStorageService.removeItem("run");
-      // Any other items you want to remove from localStorage
-    };
-
-    window.addEventListener("unload", handleUnload);
-
-    return () => {
-      window.removeEventListener("unload", handleUnload);
-    };
-  }, []);
   return (
     <BrowserRouter>
       <Routes>
