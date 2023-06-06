@@ -3,6 +3,7 @@ import axios from "axios";
 import SessionStorageService from "../utils/SessionStorageService";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import backgroundImage from "../assets/bg-login.png";
 const Login = () => {
   const [index, setIndex] = useState("");
   const [name, setName] = useState("");
@@ -96,7 +97,10 @@ const Login = () => {
           </div>
         </div>
       ) : (
-        <div className="container d-flex align-items-center justify-content-center vh-100">
+        <div
+          className="container d-flex align-items-center justify-content-center vh-100"
+          style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover" }}
+        >
           <div className="row justify-content-center">
             <div className="card">
               <div className="card-body">
