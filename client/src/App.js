@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import FoodMenu from "./pages/FoodMenu";
 import PastOrders from "./pages/PastOrders";
 import { useEffect } from "react";
-import SessionStorageService from "./utils/SessionStorageService";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 
 function App() {

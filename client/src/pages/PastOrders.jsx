@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Row, Col, Container } from "react-bootstrap";
-import SessionStorageService from "../utils/SessionStorageService";
 import OrderCard from "../components/OrderCard";
 import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
@@ -9,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 function PastOrders() {
   const [pastOrders, setPastOrders] = useState([]);
-  const user = JSON.parse(SessionStorageService.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {

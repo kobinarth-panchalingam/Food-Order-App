@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SessionStorageService from "../utils/SessionStorageService";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import backgroundImage from "../assets/bg-login.png";
@@ -15,12 +14,13 @@ const Login = () => {
 
   useEffect(() => {
     // Fetch existing users based on the index number
+
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users?index=${index}`);
         const user = response.data.user;
         if (user) {
-          SessionStorageService.setItem("user", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user));
           setGender(user.gender);
           setName(user.name);
           setSplitwiseEmail(user.splitwiseEmail);
@@ -47,6 +47,7 @@ const Login = () => {
   useEffect(() => {
     // to wait until backend responds
     const fetchUser = async () => {
+      console.log("first");
       let x = false;
       while (!x) {
         try {
@@ -61,7 +62,16 @@ const Login = () => {
       }
     };
 
+    const fetchLocalUser = () => {
+      console.log("second");
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (savedUser) {
+        navigate("/foodmenu");
+      }
+    };
+
     fetchUser();
+    fetchLocalUser();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -69,7 +79,7 @@ const Login = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index, gender, splitwiseEmail });
       if (response.status === 200) {
-        SessionStorageService.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/foodMenu");
       } else {
         toast.error("Your splitwise email address is not in the pickme group😢", {

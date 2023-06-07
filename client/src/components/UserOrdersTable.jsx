@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
-import SessionStorageService from "../utils/SessionStorageService";
 
 function UserOrdersTable() {
   const [userOrders, setUserOrders] = useState([]);
-  const user = JSON.parse(SessionStorageService.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
 
   useEffect(() => {

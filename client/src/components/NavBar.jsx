@@ -2,17 +2,16 @@ import { Nav, Navbar } from "react-bootstrap";
 import "../styles/style.css";
 import { Link } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
-import SessionStorageService from "../utils/SessionStorageService";
 
 function NavBar({ activeTab }) {
-  const user = JSON.parse(SessionStorageService.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleTabSelect = (tab) => {
     activeTab = tab;
   };
 
   const handleLogout = () => {
-    // Delete the user object from SessionStorageService
-    SessionStorageService.removeItem("user");
+    // Delete the user object from localStorage
+    localStorage.removeItem("user");
     localStorage.removeItem("run");
     window.location.href = "/";
   };
