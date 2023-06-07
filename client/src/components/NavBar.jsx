@@ -13,7 +13,7 @@ function NavBar({ activeTab }) {
   const handleLogout = () => {
     // Delete the user object from SessionStorageService
     SessionStorageService.removeItem("user");
-    SessionStorageService.removeItem("run");
+    localStorage.removeItem("run");
     window.location.href = "/";
   };
 
