@@ -65,16 +65,17 @@ function FoodMenu() {
       .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, orderList })
       .then((response) => {
         // Handle successful order submission
-        toast.success("Suucessfully ordered", {
-          position: "bottom-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // toast.success("Suucessfully ordered", {
+        //   position: "bottom-center",
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: false,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+        navigate("/currentOrder");
       })
       .catch((error) => {
         console.error("Error submitting order:", error);
