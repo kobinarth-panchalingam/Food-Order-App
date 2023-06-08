@@ -141,10 +141,10 @@ function FoodMenu() {
             </tbody>
           </Table>
 
-          <div className="bg-light text-dark">
+          <div className=" text-dark">
             <div className="row">
               <div className="col-6">
-                <h4>Total Price: Rs.{totalPrice}</h4>
+                <h4>Total: Rs.{totalPrice}</h4>
               </div>
 
               <div className="col-6">

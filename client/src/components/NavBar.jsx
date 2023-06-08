@@ -35,7 +35,7 @@ function NavBar({ activeTab }) {
           <Nav.Link as={Link} to="/pastOrders " eventKey="tab4" className="past-orders  ">
             Past Orders
           </Nav.Link>
-          <Nav.Link onClick={handleLogout} className="logout">
+          <Nav.Link onClick={handleLogout} className="logout d-flex align-items-center justify-content-center">
             <FiLogOut />
           </Nav.Link>
         </Nav>
