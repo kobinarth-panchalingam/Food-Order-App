@@ -18,7 +18,7 @@ function NavBar({ activeTab }) {
 
   return (
     <>
-      <Navbar bg="light" sticky="top">
+      <Navbar bg="light" fixed="bottom" className="p-0" style={{ height: 60 }}>
         {/* <Navbar.Brand className="mx-2" href="#">
           Pick Me
         </Navbar.Brand> */}

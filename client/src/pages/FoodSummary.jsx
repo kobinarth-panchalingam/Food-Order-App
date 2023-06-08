@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import Guide from "../components/Guide";
+import Greeting from "../components/Greeting";
 
 function FoodSummary() {
   const navigate = useNavigate();
@@ -21,9 +22,10 @@ function FoodSummary() {
   return (
     <>
       <div className="full-height container-fluid" {...swipeHandlers}>
-        <NavBar activeTab={"tab3"} />
+        <Greeting />
         <FoodSummaryTable />
         <UserOrdersTable />
+        <NavBar activeTab={"tab3"} />
       </div>
     </>
   );

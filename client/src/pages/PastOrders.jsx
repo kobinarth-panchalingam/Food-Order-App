@@ -5,6 +5,7 @@ import OrderCard from "../components/OrderCard";
 import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import Greeting from "../components/Greeting";
 
 function PastOrders() {
   const [pastOrders, setPastOrders] = useState([]);
@@ -50,7 +51,7 @@ function PastOrders() {
   return (
     <>
       <div className="full-height container-fluid" {...swipeHandlers}>
-        <NavBar activeTab={"tab4"} />
+        <Greeting />
         {pastOrders.length ? (
           <Row>
             {pastOrders.map((order) => (
@@ -64,6 +65,7 @@ function PastOrders() {
             No Past Orders
           </h4>
         )}
+        <NavBar activeTab={"tab4"} />
       </div>
     </>
   );

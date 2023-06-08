@@ -8,6 +8,7 @@ import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import Guide from "../components/Guide";
+import Greeting from "../components/Greeting";
 
 function FoodMenu() {
   const [foods, setFoods] = useState([]);
@@ -108,13 +109,10 @@ function FoodMenu() {
 
   return (
     <>
-      <div className=" full-height container-fluid swipe-element" {...swipeHandlers}>
+      <div className="container-fluid swipe-element" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Guide />
-        <NavBar activeTab={"tab1"} />
-        <div className="text-center ">
-          <h2 className="my-3" style={{ opacity: 0.7 }}>
-            Hi {user.name} 😉
-          </h2>
+        <Greeting />
+        <div className="text-center pb-2">
           <Table striped bordered responsive>
             <thead>
               <tr>
@@ -143,14 +141,14 @@ function FoodMenu() {
             </tbody>
           </Table>
 
-          <div className="p-1 bg-light text-dark">
+          <div className="bg-light text-dark">
             <div className="row">
               <div className="col-6">
                 <h4>Total Price: Rs.{totalPrice}</h4>
               </div>
 
               <div className="col-6">
-                <Button variant="warning" onClick={handleOrderSubmit}>
+                <Button disabled={totalPrice === 0} variant="warning" onClick={handleOrderSubmit}>
                   Submit Order
                 </Button>
                 <ToastContainer />
@@ -159,6 +157,8 @@ function FoodMenu() {
           </div>
         </div>
       </div>
+
+      <NavBar activeTab={"tab1"} />
     </>
   );
 }

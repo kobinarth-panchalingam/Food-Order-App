@@ -4,6 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import Greeting from "../components/Greeting";
 
 function UserOrders() {
   const [orders, setOrders] = useState([]);
@@ -59,7 +60,7 @@ function UserOrders() {
   return (
     <>
       <div className="full-height container-fluid" {...swipeHandlers}>
-        <NavBar activeTab={"tab2"} />
+        <Greeting />
         {orders.length ? (
           <div className="text-center">
             <Table bordered responsive>
@@ -92,6 +93,7 @@ function UserOrders() {
             No Orders Yet
           </h3>
         )}
+        <NavBar activeTab={"tab2"} />
       </div>
     </>
   );
