@@ -16,28 +16,28 @@ const Guide = () => {
     {
       target: ".order-here",
       content: "Welcome to the Order Here page! Click here to place an order.",
-      placement: "bottom",
+      placement: "top",
     },
 
     {
       target: ".current-order",
       content: "This is the Current Order page. Check your ongoing orders here.",
-      placement: "bottom",
+      placement: "top",
     },
     {
       target: ".all-orders",
       content: "View all orders on the All Orders page.",
-      placement: "bottom",
+      placement: "top",
     },
     {
       target: ".past-orders",
       content: "Access your past orders on the Past Orders page.",
-      placement: "bottom",
+      placement: "top",
     },
     {
       target: ".logout",
       content: "Click here to log out.",
-      placement: "bottom",
+      placement: "top",
     },
     // Add more steps for your tutorial as needed
   ];
