@@ -21,7 +21,7 @@ function FoodSummary() {
   });
   return (
     <>
-      <div className="full-height container-fluid" {...swipeHandlers}>
+      <div className="container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
         <FoodSummaryTable />
         <UserOrdersTable />

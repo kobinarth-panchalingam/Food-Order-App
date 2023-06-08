@@ -50,7 +50,7 @@ function PastOrders() {
 
   return (
     <>
-      <div className="full-height container-fluid" {...swipeHandlers}>
+      <div className="full-height container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
         {pastOrders.length ? (
           <Row>
@@ -65,8 +65,8 @@ function PastOrders() {
             No Past Orders
           </h4>
         )}
-        <NavBar activeTab={"tab4"} />
       </div>
+      <NavBar activeTab={"tab4"} />
     </>
   );
 }

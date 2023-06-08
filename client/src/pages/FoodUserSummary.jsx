@@ -59,7 +59,7 @@ function UserOrders() {
 
   return (
     <>
-      <div className="full-height container-fluid" {...swipeHandlers}>
+      <div className="full-height container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
         {orders.length ? (
           <div className="text-center">
@@ -93,8 +93,8 @@ function UserOrders() {
             No Orders Yet
           </h3>
         )}
-        <NavBar activeTab={"tab2"} />
       </div>
+      <NavBar activeTab={"tab2"} />
     </>
   );
 }
