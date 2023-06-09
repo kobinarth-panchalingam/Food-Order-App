@@ -8,11 +8,11 @@ const sw = Splitwise({
 
 const group_id = process.env.GROUP_ID;
 
-async function createDebt(to, description, amount) {
+async function createDebt(from, to, description, amount) {
   try {
-    if (to != process.env.FROM) {
+    if (to != from) {
       const debt = await sw.createDebt({
-        from: process.env.FROM,
+        from: from,
         to: to,
         group_id: group_id,
         description: description,

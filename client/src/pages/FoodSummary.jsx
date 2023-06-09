@@ -5,9 +5,12 @@ import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import Guide from "../components/Guide";
 import Greeting from "../components/Greeting";
+import PayerSelection from "../components/SplitPayer";
+import { useState } from "react";
 
 function FoodSummary() {
   const navigate = useNavigate();
+  const [selectedPayer, setSelectedPayer] = useState("53064760");
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       // Handle swipe left to navigate to the next tab
@@ -24,7 +27,8 @@ function FoodSummary() {
       <div className="container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
         <FoodSummaryTable />
-        <UserOrdersTable />
+        <PayerSelection selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
+        <UserOrdersTable from={selectedPayer} />
         <NavBar activeTab={"tab3"} />
       </div>
     </>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
 
-function UserOrdersTable() {
+function UserOrdersTable({ from }) {
   const [userOrders, setUserOrders] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
@@ -60,7 +60,7 @@ function UserOrdersTable() {
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
     const description = userOrders[index].orders.map((order) => ` ${order.food}-${order.quantity}`).join(", ");
     axios
-      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { description: description })
+      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { from: from, description: description })
       .then(() => {
         // Fetch the updated user orders after marking the order as finished
         axios
