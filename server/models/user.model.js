@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"], // Specify the allowed roles as an array
       default: "user", // Set the default role to "user"
     },
+    canOrder: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     collection: "User", // Specify the desired collection name

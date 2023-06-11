@@ -72,10 +72,6 @@ const foodData = [
     name: "Gee Thosa",
     price: 325,
   },
-  {
-    name: "Naan Rotti",
-    price: 140,
-  },
 
   // Add more food items as needed
 ];
@@ -105,7 +101,7 @@ const createAdmin = async () => {
 const updateAllUsersToUserRole = async () => {
   try {
     // Update all users to "user" role
-    await User.updateMany({}, { role: "user" });
+    await User.updateMany({}, { canOrder: false });
 
     console.log("All users updated to 'user' role successfully.");
   } catch (error) {

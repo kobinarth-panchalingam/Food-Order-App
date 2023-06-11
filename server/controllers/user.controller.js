@@ -56,8 +56,23 @@ const getUsers = async (req, res) => {
   }
 };
 
+const updateOrderPermision = async (req, res) => {
+  const { type } = req.body;
+  try {
+    // Update all users to "user" role
+    if (type === "start") {
+      await User.updateMany({}, { canOrder: true });
+    } else {
+      await User.updateMany({}, { canOrder: false });
+    }
+    res.status(200);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 module.exports = {
   createUser,
   getUsers,
   getUserByIndex,
+  updateOrderPermision,
 };

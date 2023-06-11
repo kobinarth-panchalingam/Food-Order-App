@@ -14,6 +14,7 @@ function FoodMenu() {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const user = JSON.parse(localStorage.getItem("user"));
+  const [canOrder, setCanOrder] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +27,16 @@ function FoodMenu() {
           quantity: 0,
         }));
         setFoods(updatedFoods);
+      })
+      .catch((error) => {
+        console.error("Error fetching food data:", error);
+      });
+
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/users?index=${localUser.index}`)
+      .then((response) => {
+        setCanOrder(response.data.user.canOrder);
       })
       .catch((error) => {
         console.error("Error fetching food data:", error);
@@ -141,20 +152,24 @@ function FoodMenu() {
             </tbody>
           </Table>
 
-          <div className=" text-dark">
-            <div className="row">
-              <div className="col-6">
-                <h4>Total: Rs.{totalPrice}</h4>
-              </div>
+          {canOrder ? (
+            <div className=" text-dark">
+              <div className="row">
+                <div className="col-6">
+                  <h4>Total: Rs.{totalPrice}</h4>
+                </div>
 
-              <div className="col-6">
-                <Button disabled={totalPrice === 0} variant="warning" onClick={handleOrderSubmit}>
-                  Submit Order
-                </Button>
-                <ToastContainer />
+                <div className="col-6">
+                  <Button disabled={totalPrice === 0} variant="warning" onClick={handleOrderSubmit}>
+                    Submit Order
+                  </Button>
+                  <ToastContainer />
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <h3>You can't order right now</h3>
+          )}
         </div>
       </div>
 

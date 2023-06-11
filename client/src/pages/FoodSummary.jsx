@@ -7,10 +7,12 @@ import Guide from "../components/Guide";
 import Greeting from "../components/Greeting";
 import PayerSelection from "../components/SplitPayer";
 import { useState } from "react";
+import OrderController from "../components/OrderController";
 
 function FoodSummary() {
   const navigate = useNavigate();
   const [selectedPayer, setSelectedPayer] = useState("53064760");
+  const user = JSON.parse(localStorage.getItem("user"));
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       // Handle swipe left to navigate to the next tab
@@ -27,7 +29,12 @@ function FoodSummary() {
       <div className="container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
         <FoodSummaryTable />
-        <PayerSelection selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
+        {user.role === "admin" && (
+          <>
+            <PayerSelection selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
+            <OrderController />
+          </>
+        )}
         <UserOrdersTable from={selectedPayer} />
         <NavBar activeTab={"tab3"} />
       </div>

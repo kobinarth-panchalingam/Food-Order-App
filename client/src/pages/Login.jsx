@@ -47,7 +47,6 @@ const Login = () => {
   useEffect(() => {
     // to wait until backend responds
     const fetchUser = async () => {
-      console.log("first");
       let x = false;
       while (!x) {
         try {
@@ -63,7 +62,6 @@ const Login = () => {
     };
 
     const fetchLocalUser = () => {
-      console.log("second");
       const savedUser = JSON.parse(localStorage.getItem("user"));
       if (savedUser) {
         navigate("/foodmenu");
@@ -82,7 +80,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/foodMenu");
       } else {
-        toast.error("Your splitwise email address is not in the pickme group😢", {
+        toast.error("First you need to be added to the splitwise group😢.", {
           position: "bottom-center",
           autoClose: 3000,
           hideProgressBar: false,
