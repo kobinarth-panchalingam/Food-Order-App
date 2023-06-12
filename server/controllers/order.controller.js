@@ -126,30 +126,28 @@ const deleteOrder = async (req, res) => {
 
 const finishOrder = async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const { description, from } = req.body;
-
-    const order = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
-    if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+    const { splitwiseData, from } = req.body;
+    // console.log(splitwiseData);
+    for (const data of splitwiseData) {
+      const { orderId, description } = data;
+      const updatedOrder = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
+      if (!updatedOrder) {
+        return res.status(404).json({ error: `Order with ID ${orderId} not found` });
+      }
+      let totalPrice = 0;
+      updatedOrder.orderList.forEach((orderItem) => {
+        totalPrice += orderItem.food.price * orderItem.quantity;
+      });
+      const firstName = updatedOrder.user.name.split(" ")[0];
+      const newDescription = `${firstName}-${description}`;
+      // Call the createDebt function with the necessary parameters
+      await createDebt(from, updatedOrder.user.splitwiseId, newDescription, totalPrice);
     }
-    let totalPrice = 0;
-    order.orderList.forEach((orderItem) => {
-      totalPrice += orderItem.food.price * orderItem.quantity;
-    });
 
-    // Create a description based on food names in the order list
-    const foodNames = order.orderList.map((item) => item.food.name);
-    const firstName = order.user.name.split(" ")[0];
-    const newDescription = `${firstName}-${description}`;
-
-    // Call the createDebt function with the necessary parameters
-    const result = await createDebt(from, order.user.splitwiseId, newDescription, totalPrice);
-
-    res.json({ message: "Order finished successfully", order });
+    res.json({ message: "Orders finished successfully" });
   } catch (error) {
-    console.error("Error finishing order:", error);
-    res.status(500).json({ error: "Failed to finish order" });
+    console.error("Error finishing orders:", error);
+    res.status(500).json({ error: "Failed to finish orders" });
   }
 };
 

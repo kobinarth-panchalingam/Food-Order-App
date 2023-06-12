@@ -51,31 +51,37 @@ function UserOrdersTable({ from }) {
     return Object.values(userOrderMap);
   };
 
-  const handleFinishOrder = (orderId, index) => {
+  const handleFinishOrder = () => {
     if (isFinishingOrder) {
       // If finishing order API call is already in progress, return early
       return;
     }
 
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
-    const description = userOrders[index].orders.map((order) => ` ${order.food}-${order.quantity}`).join(", ");
+    const splitwiseData = userOrders.map((userOrder) => {
+      return {
+        orderId: userOrder._id,
+        description: userOrder.orders.map((order) => `${order.food}-${order.quantity}`).join(", "),
+      };
+    });
+
     axios
-      .patch(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`, { from: from, description: description })
+      .post(`${process.env.REACT_APP_API_URL}/api/orders/splitwise`, { splitwiseData, from })
       .then(() => {
-        // Fetch the updated user orders after marking the order as finished
+        // Fetch the updated user orders after finishing the orders
         axios
           .get(`${process.env.REACT_APP_API_URL}/api/orders`)
           .then((response) => {
             const updatedUserOrders = getUserOrders(response.data);
             setUserOrders(updatedUserOrders);
-            console.log("Order finished successfully");
+            console.log("Orders finished successfully");
           })
           .catch((error) => {
             console.error("Error fetching order data:", error);
           });
       })
       .catch((error) => {
-        console.error("Error finishing order:", error);
+        console.error("Error finishing orders:", error);
       })
       .finally(() => {
         setIsFinishingOrder(false); // Reset the flag after finishing order API call is complete
@@ -86,12 +92,20 @@ function UserOrdersTable({ from }) {
     <>
       {userOrders.length ? (
         <div className="text-center">
+          {user.role === "admin" && (
+            <div className="container mb-4">
+              <div className="p-2 row border">
+                <Button variant="success" onClick={handleFinishOrder} disabled={isFinishingOrder}>
+                  Finish Orders and Add Splitwise
+                </Button>
+              </div>
+            </div>
+          )}
           <Table striped bordered responsive>
             <thead>
               <tr>
                 <th>User</th>
                 <th>Orders</th>
-                {user.role === "admin" && <th>Splitwise</th>}
               </tr>
             </thead>
             <tbody>
@@ -107,13 +121,6 @@ function UserOrdersTable({ from }) {
                       ))}
                     </ul>
                   </td>
-                  {user.role === "admin" && (
-                    <td>
-                      <Button variant="success" onClick={() => handleFinishOrder(userOrder._id, index)}>
-                        Add
-                      </Button>
-                    </td>
-                  )}
                 </tr>
               ))}
             </tbody>

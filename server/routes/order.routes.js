@@ -10,7 +10,7 @@ const {
 } = require("../controllers/order.controller");
 
 // Order routes
-router.patch("/:orderId", finishOrder);
+router.post("/splitwise", finishOrder);
 router.post("/", createOrder);
 router.get("/", getUnfinishedOrders);
 router.get("/user/:userId", getUnfinishedOrdersByUser);
