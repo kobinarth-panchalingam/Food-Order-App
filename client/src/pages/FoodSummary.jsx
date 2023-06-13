@@ -11,8 +11,8 @@ import OrderController from "../components/OrderController";
 
 function FoodSummary() {
   const navigate = useNavigate();
-  const [selectedPayer, setSelectedPayer] = useState("53064760");
   const user = JSON.parse(localStorage.getItem("user"));
+  const [selectedPayer, setSelectedPayer] = useState(user.splitwiseId);
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       // Handle swipe left to navigate to the next tab
