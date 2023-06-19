@@ -4,6 +4,7 @@ import { Table, Button } from "react-bootstrap";
 
 function UserOrdersTable({ from }) {
   const [userOrders, setUserOrders] = useState([]);
+  const [users, setUsers] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
 
@@ -16,6 +17,15 @@ function UserOrdersTable({ from }) {
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
+      });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/users/all`)
+      .then((response) => {
+        const allUsers = response.data.map((user) => user.name);
+        setUsers(allUsers);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
       });
   }, []);
 
@@ -88,6 +98,11 @@ function UserOrdersTable({ from }) {
       });
   };
 
+  // Find users who haven't ordered yet
+  const getUsersWithoutOrders = () => {
+    const orderedUsers = userOrders.map((userOrder) => userOrder.name);
+    return users.filter((user) => !orderedUsers.includes(user));
+  };
   return (
     <>
       {userOrders.length ? (
@@ -121,6 +136,12 @@ function UserOrdersTable({ from }) {
                       ))}
                     </ul>
                   </td>
+                </tr>
+              ))}
+              {getUsersWithoutOrders().map((user, index) => (
+                <tr key={index}>
+                  <td>{user}</td>
+                  <td>No orders yet</td>
                 </tr>
               ))}
             </tbody>
