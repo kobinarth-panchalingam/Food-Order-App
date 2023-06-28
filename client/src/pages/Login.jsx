@@ -20,7 +20,7 @@ const Login = () => {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users?index=${index}`);
         const user = response.data.user;
         if (user) {
-          localStorage.setItem("user", JSON.stringify(user));
+          sessionStorage.setItem("user", JSON.stringify(user));
           setGender(user.gender);
           setName(user.name);
           setSplitwiseEmail(user.splitwiseEmail);
@@ -62,7 +62,7 @@ const Login = () => {
     };
 
     const fetchLocalUser = () => {
-      const savedUser = JSON.parse(localStorage.getItem("user"));
+      const savedUser = JSON.parse(sessionStorage.getItem("user"));
       if (savedUser) {
         navigate("/foodmenu");
       }
@@ -77,7 +77,7 @@ const Login = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, { name, index, gender, splitwiseEmail });
       if (response.status === 200) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/foodMenu");
       } else {
         toast.error("First you need to be added to the splitwise group😢.", {

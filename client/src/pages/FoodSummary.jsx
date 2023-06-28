@@ -11,7 +11,7 @@ import OrderController from "../components/OrderController";
 
 function FoodSummary() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [selectedPayer, setSelectedPayer] = useState(user.splitwiseId);
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {

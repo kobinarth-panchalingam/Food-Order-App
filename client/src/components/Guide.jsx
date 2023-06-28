@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 
 const Guide = () => {
-  const run = localStorage.getItem("run");
-  const [runTutorial, setRunTutorial] = useState(!run);
+  const run = sessionStorage.getItem("run");
+  const [runTutorial, setRunTutorial] = useState(false); //need to change this code
   const [stepIndex, setStepIndex] = useState(0);
 
   const steps = [
@@ -50,7 +50,7 @@ const Guide = () => {
       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
     } else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       // Need to set our running state to false, so we can restart if we click start again.
-      localStorage.setItem("run", true);
+      sessionStorage.setItem("run", true);
     }
   };
 

@@ -1,7 +1,7 @@
 export default function Greeting() {
   const currentHour = new Date().getHours();
   let greeting = "";
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   if (currentHour < 12) {
     greeting = "Good Morning";
   } else if (currentHour < 18) {

@@ -5,7 +5,7 @@ const OrderController = () => {
   const [canOrder, setCanOrder] = useState(false);
   useEffect(() => {
     // Fetch food data from backend server
-    const localUser = JSON.parse(localStorage.getItem("user"));
+    const localUser = JSON.parse(sessionStorage.getItem("user"));
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/users?index=${localUser.index}`)
       .then((response) => {

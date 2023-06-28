@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const isUserLoggedIn = localStorage.getItem("user");
+  const isUserLoggedIn = sessionStorage.getItem("user");
   return isUserLoggedIn ? <Outlet /> : <Navigate to="/" />;
 };
 

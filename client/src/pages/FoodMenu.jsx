@@ -13,7 +13,7 @@ import Greeting from "../components/Greeting";
 function FoodMenu() {
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [canOrder, setCanOrder] = useState(false);
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ function FoodMenu() {
         console.error("Error fetching food data:", error);
       });
 
-    const localUser = JSON.parse(localStorage.getItem("user"));
+    const localUser = JSON.parse(sessionStorage.getItem("user"));
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/users?index=${localUser.index}`)
       .then((response) => {

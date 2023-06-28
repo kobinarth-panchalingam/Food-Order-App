@@ -8,7 +8,7 @@ import Greeting from "../components/Greeting";
 
 function UserOrders() {
   const [orders, setOrders] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {

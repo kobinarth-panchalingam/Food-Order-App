@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 
 function NavBar({ activeTab }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const handleTabSelect = (tab) => {
     activeTab = tab;
   };
 
   const handleLogout = () => {
-    // Delete the user object from localStorage
-    localStorage.removeItem("user");
-    localStorage.removeItem("run");
+    // Delete the user object from sessionStorage
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("run");
     window.location.href = "/";
   };
 

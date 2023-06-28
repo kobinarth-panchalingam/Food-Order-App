@@ -5,7 +5,7 @@ import { Table, Button } from "react-bootstrap";
 function UserOrdersTable({ from }) {
   const [userOrders, setUserOrders] = useState([]);
   const [users, setUsers] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
 
   useEffect(() => {
