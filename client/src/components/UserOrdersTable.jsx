@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Modal } from "react-bootstrap";
 
 function UserOrdersTable({ from }) {
   const [userOrders, setUserOrders] = useState([]);
@@ -8,6 +8,7 @@ function UserOrdersTable({ from }) {
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
   const [offerPrice, setOfferPrice] = useState(0);
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false); // State variable for the confirmation modal
 
   useEffect(() => {
     axios
@@ -68,6 +69,11 @@ function UserOrdersTable({ from }) {
       return;
     }
 
+    // Open the confirmation modal
+    setConfirmationModalOpen(true);
+  };
+
+  const confirmFinishOrder = () => {
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
     const splitwiseData = userOrders.map((userOrder) => {
       return {
@@ -97,6 +103,14 @@ function UserOrdersTable({ from }) {
       .finally(() => {
         setIsFinishingOrder(false); // Reset the flag after finishing order API call is complete
       });
+
+    // Close the confirmation modal
+    setConfirmationModalOpen(false);
+  };
+
+  const cancelFinishOrder = () => {
+    // Close the confirmation modal
+    setConfirmationModalOpen(false);
   };
 
   // Find users who haven't ordered yet
@@ -104,6 +118,7 @@ function UserOrdersTable({ from }) {
     const orderedUsers = userOrders.map((userOrder) => userOrder.name);
     return users.filter((user) => !orderedUsers.includes(user));
   };
+
   return (
     <>
       {userOrders.length ? (
@@ -163,6 +178,24 @@ function UserOrdersTable({ from }) {
       ) : (
         <></>
       )}
+
+      {/* Confirmation Modal */}
+      <Modal show={confirmationModalOpen} onHide={cancelFinishOrder} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure the selected payer details are correct?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={cancelFinishOrder}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={confirmFinishOrder}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
