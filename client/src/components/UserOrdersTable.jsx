@@ -7,6 +7,7 @@ function UserOrdersTable({ from }) {
   const [users, setUsers] = useState([]);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
+  const [offerPrice, setOfferPrice] = useState(0);
 
   useEffect(() => {
     axios
@@ -76,7 +77,7 @@ function UserOrdersTable({ from }) {
     });
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/orders/splitwise`, { splitwiseData, from })
+      .post(`${process.env.REACT_APP_API_URL}/api/orders/splitwise`, { splitwiseData, from, offerPrice })
       .then(() => {
         // Fetch the updated user orders after finishing the orders
         axios
@@ -110,6 +111,18 @@ function UserOrdersTable({ from }) {
           {user.role === "admin" && (
             <div className="container mb-4">
               <div className="p-2 row border">
+                <div className="input-group p-0 mb-3">
+                  <span className="input-group-text">Offer Price</span>
+                  <span className="input-group-text">Rs.</span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Enter offer price"
+                    value={offerPrice}
+                    onChange={(e) => setOfferPrice(parseFloat(e.target.value))}
+                  />
+                </div>
+
                 <Button variant="success" onClick={handleFinishOrder} disabled={isFinishingOrder}>
                   Finish Orders and Add Splitwise
                 </Button>

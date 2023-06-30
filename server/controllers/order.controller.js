@@ -126,8 +126,8 @@ const deleteOrder = async (req, res) => {
 
 const finishOrder = async (req, res) => {
   try {
-    const { splitwiseData, from } = req.body;
-    // console.log(splitwiseData);
+    const { splitwiseData, from, offerPrice } = req.body;
+    discount = offerPrice / splitwiseData.length;
     for (const data of splitwiseData) {
       const { orderId, description } = data;
       const updatedOrder = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
@@ -138,6 +138,7 @@ const finishOrder = async (req, res) => {
       updatedOrder.orderList.forEach((orderItem) => {
         totalPrice += orderItem.food.price * orderItem.quantity;
       });
+      totalPrice = totalPrice - discount;
       const firstName = updatedOrder.user.name.split(" ")[0];
       const newDescription = `${firstName}-${description}`;
       // Call the createDebt function with the necessary parameters
