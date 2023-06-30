@@ -120,7 +120,7 @@ function FoodMenu() {
 
   return (
     <>
-      <div className="container-fluid swipe-element" {...swipeHandlers} style={{ marginBottom: 60 }}>
+      <div className="container-fluid swipe-element" {...swipeHandlers} style={{ marginBottom: 120 }}>
         <Guide />
         <Greeting />
         <div className="text-center pb-2">
@@ -151,27 +151,28 @@ function FoodMenu() {
               ))}
             </tbody>
           </Table>
-
-          {canOrder ? (
-            <div className=" text-dark">
-              <div className="row">
-                <div className="col-6">
-                  <h4>Total: Rs.{totalPrice}</h4>
-                </div>
-
-                <div className="col-6">
-                  <Button disabled={totalPrice === 0} variant="warning" onClick={handleOrderSubmit}>
-                    Submit Order
-                  </Button>
-                  <ToastContainer />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <h3>You can't order right now</h3>
-          )}
         </div>
       </div>
+
+      {canOrder ? (
+        <div className="container-fluid bg-white text-dark text-center position-fixed p-2 " style={{ bottom: 60 }}>
+          <div className="row">
+            <div className="col-6 ">
+              <h4>Total: Rs.{totalPrice}</h4>
+            </div>
+
+            <div className="col-6">
+              <div class="d-grid gap-1">
+                <button disabled={totalPrice === 0} className="btn btn-warning" onClick={handleOrderSubmit} type="button" block>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <h3>You can't order right now</h3>
+      )}
 
       <NavBar activeTab={"tab1"} />
     </>
