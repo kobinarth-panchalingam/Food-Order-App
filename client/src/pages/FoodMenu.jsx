@@ -171,7 +171,9 @@ function FoodMenu() {
           </div>
         </div>
       ) : (
-        <h3>You can't order right now</h3>
+        <div className="container-fluid bg-white text-dark text-center position-fixed p-2 " style={{ bottom: 60 }}>
+          <h3 className="text-danger">You can't order right now</h3>
+        </div>
       )}
 
       <NavBar activeTab={"tab1"} />
