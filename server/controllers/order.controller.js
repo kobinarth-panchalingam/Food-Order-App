@@ -73,6 +73,20 @@ const getUnfinishedOrders = async (req, res) => {
   }
 };
 
+//controller to delete all unfinished orders
+const deleteUnfinishedOrders = async (req, res) => {
+  try {
+    const unfinishedOrders = await Order.deleteMany({
+      isFinished: false,
+    });
+    res.json(unfinishedOrders);
+    console.log("Unfinished orders deleted successfully");
+  } catch (error) {
+    console.error("Error deleting unfinished orders:", error);
+    res.status(500).json({ error: "Failed to delete unfinished orders" });
+  }
+};
+
 const getUnfinishedOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -172,4 +186,5 @@ module.exports = {
   deleteOrder,
   finishOrder,
   getCompletedOrdersByUser,
+  deleteUnfinishedOrders,
 };

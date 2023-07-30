@@ -5,7 +5,7 @@ import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import Guide from "../components/Guide";
 import Greeting from "../components/Greeting";
-import PayerSelection from "../components/SplitPayer";
+import SplitPayer from "../components/SplitPayer";
 import { useState } from "react";
 import OrderController from "../components/OrderController";
 
@@ -31,7 +31,7 @@ function FoodSummary() {
         <FoodSummaryTable />
         {user.role === "admin" && (
           <>
-            <PayerSelection selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
+            <SplitPayer selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
             <OrderController />
           </>
         )}
