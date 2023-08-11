@@ -72,6 +72,26 @@ const foodData = [
     name: "Gee Thosa",
     price: 325,
   },
+  {
+    name: "Paper Dosai",
+    price: 240,
+  },
+  {
+    name: "Ghee Masaala Dosai",
+    price: 380,
+  },
+  {
+    name: "Onion Dosai",
+    price: 315,
+  },
+  {
+    name: "Cheese Dosai",
+    price: 415,
+  },
+  {
+    name: "Idli (2pcs)",
+    price: 260,
+  },
 
   // Add more food items as needed
 ];

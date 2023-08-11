@@ -15,7 +15,7 @@ const createFood = async (req, res) => {
 // Controller to get all food items
 const getFoodItems = async (req, res) => {
   try {
-    const foodItems = await Food.find();
+    const foodItems = await Food.find().sort({ price: "asc" });
     res.json(foodItems);
   } catch (error) {
     res.status(400).json({ error: error.message });
