@@ -7,17 +7,20 @@ import FoodMenu from "./pages/FoodMenu";
 import PastOrders from "./pages/PastOrders";
 import { useEffect } from "react";
 import ProtectedRoute from "./utils/ProtectedRoutes";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route element={<ProtectedRoute />}>
-          <Route exact path="/foodMenu" element={<FoodMenu />} />
-          <Route exact path="/currentOrder" element={<UserOrders />} />
-          <Route exact path="/allOrders" element={<FoodSummary />} />
-          <Route exact path="/pastOrders" element={<PastOrders />} />
+          <Route path="/foodMenu" element={<FoodMenu />} />
+          <Route path="/currentOrder" element={<UserOrders />} />
+          <Route path="/allOrders" element={<Orders />} />
+          <Route path="/allOrders/esaki" element={<FoodSummary orderPlace={"Esaki"} />} />
+          <Route path="/allOrders/university" element={<FoodSummary orderPlace={"University"} />} />
+          <Route path="/pastOrders" element={<PastOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>

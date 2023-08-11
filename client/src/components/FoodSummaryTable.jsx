@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table } from "react-bootstrap";
 
-function FoodSummaryTable() {
+function FoodSummaryTable({ orderPlace }) {
   const [foodSummary, setFoodSummary] = useState([]);
   const [show, setShow] = useState(false);
 
@@ -27,44 +27,46 @@ function FoodSummaryTable() {
     let totalFemaleFoods = 0;
     let totalPrice = 0;
 
-    orders.forEach((order) => {
-      const { orderList, user } = order;
+    orders
+      .filter((userOrder) => userOrder.orderPlace === orderPlace)
+      .forEach((order) => {
+        const { orderList, user } = order;
 
-      orderList.forEach((orderItem) => {
-        const { food, quantity } = orderItem;
+        orderList.forEach((orderItem) => {
+          const { food, quantity } = orderItem;
 
-        if (summary[food._id]) {
-          summary[food._id].quantity += quantity;
-          summary[food._id].totalPrice += food.price * quantity;
-        } else {
-          summary[food._id] = {
-            food: food.name,
-            quantity,
-            totalPrice: food.price * quantity,
-          };
-        }
-
-        if (user && user.gender === "male") {
-          if (maleSummary[food._id]) {
-            maleSummary[food._id] += quantity;
+          if (summary[food._id]) {
+            summary[food._id].quantity += quantity;
+            summary[food._id].totalPrice += food.price * quantity;
           } else {
-            maleSummary[food._id] = quantity;
+            summary[food._id] = {
+              food: food.name,
+              quantity,
+              totalPrice: food.price * quantity,
+            };
           }
-          totalMaleFoods += quantity;
-        }
 
-        if (user && user.gender === "female") {
-          if (femaleSummary[food._id]) {
-            femaleSummary[food._id] += quantity;
-          } else {
-            femaleSummary[food._id] = quantity;
+          if (user && user.gender === "male") {
+            if (maleSummary[food._id]) {
+              maleSummary[food._id] += quantity;
+            } else {
+              maleSummary[food._id] = quantity;
+            }
+            totalMaleFoods += quantity;
           }
-          totalFemaleFoods += quantity;
-        }
 
-        totalPrice += food.price * quantity;
+          if (user && user.gender === "female") {
+            if (femaleSummary[food._id]) {
+              femaleSummary[food._id] += quantity;
+            } else {
+              femaleSummary[food._id] = quantity;
+            }
+            totalFemaleFoods += quantity;
+          }
+
+          totalPrice += food.price * quantity;
+        });
       });
-    });
 
     return { summary, maleSummary, femaleSummary, totalMaleFoods, totalFemaleFoods, totalPrice };
   };

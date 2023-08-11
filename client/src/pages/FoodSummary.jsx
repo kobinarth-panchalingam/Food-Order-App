@@ -9,7 +9,7 @@ import SplitPayer from "../components/SplitPayer";
 import { useState } from "react";
 import OrderController from "../components/OrderController";
 
-function FoodSummary() {
+function FoodSummary({ orderPlace }) {
   const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [selectedPayer, setSelectedPayer] = useState(user.splitwiseId);
@@ -28,14 +28,14 @@ function FoodSummary() {
     <>
       <div className="container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
-        <FoodSummaryTable />
+        <FoodSummaryTable orderPlace={orderPlace} />
         {user.role === "admin" && (
           <>
             <SplitPayer selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
             <OrderController />
           </>
         )}
-        <UserOrdersTable from={selectedPayer} />
+        <UserOrdersTable from={selectedPayer} orderPlace={orderPlace} />
         <NavBar activeTab={"tab3"} />
       </div>
     </>

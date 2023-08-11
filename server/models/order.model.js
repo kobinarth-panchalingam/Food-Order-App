@@ -29,7 +29,11 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    orderPlace: {
+      type: String,
+      enum: ["Esaki", "University"],
+      default: "Esaki",
+    },
     // You can include additional fields like order date, total price, etc. based on your requirements
   },
   {

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button } from "react-bootstrap";
-import NavBar from "../components/NavBar";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import Greeting from "../components/Greeting";
+import NavBar from "../components/NavBar";
 
 function UserOrders() {
   const [orders, setOrders] = useState([]);

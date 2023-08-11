@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Modal } from "react-bootstrap";
 
-function UserOrdersTable({ from }) {
+function UserOrdersTable({ from, orderPlace }) {
   const [userOrders, setUserOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
   const [offerPrice, setOfferPrice] = useState(0);
-  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false); // State variable for the confirmation modal
-
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/orders`)
@@ -34,31 +33,33 @@ function UserOrdersTable({ from }) {
   const getUserOrders = (orders) => {
     const userOrderMap = {};
 
-    orders.forEach((order) => {
-      const { user, orderList, _id } = order;
+    orders
+      .filter((userOrder) => userOrder.orderPlace === orderPlace)
+      .forEach((order) => {
+        const { user, orderList, _id, orderPlace } = order;
 
-      const { name } = user;
+        const { name } = user;
 
-      orderList.forEach((orderItem) => {
-        const { food, quantity } = orderItem;
+        orderList.forEach((orderItem) => {
+          const { food, quantity } = orderItem;
 
-        if (!userOrderMap[name]) {
-          userOrderMap[name] = {
-            _id,
-            name,
-            orders: [{ food: food.name, quantity }],
-          };
-        } else {
-          const existingOrder = userOrderMap[name].orders.find((order) => order.food === food.name);
-
-          if (existingOrder) {
-            existingOrder.quantity += quantity;
+          if (!userOrderMap[name]) {
+            userOrderMap[name] = {
+              _id,
+              name,
+              orders: [{ food: food.name, quantity }],
+            };
           } else {
-            userOrderMap[name].orders.push({ food: food.name, quantity });
+            const existingOrder = userOrderMap[name].orders.find((order) => order.food === food.name);
+
+            if (existingOrder) {
+              existingOrder.quantity += quantity;
+            } else {
+              userOrderMap[name].orders.push({ food: food.name, quantity });
+            }
           }
-        }
+        });
       });
-    });
 
     return Object.values(userOrderMap);
   };

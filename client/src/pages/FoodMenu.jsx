@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Modal } from "react-bootstrap";
 import "../styles/style.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,6 +15,8 @@ function FoodMenu() {
   const [totalPrice, setTotalPrice] = useState(0);
   const user = JSON.parse(sessionStorage.getItem("user"));
   const [canOrder, setCanOrder] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [orderPlace, setOrderPlace] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,30 +72,28 @@ function FoodMenu() {
   };
 
   const handleOrderSubmit = () => {
+    // Show the confirmation modal
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    // Close the modal
+    setShowConfirmation(false);
+
     const orderList = foods.filter((food) => food.quantity > 0);
     const userId = user._id;
+
     // Send orderList data to backend server
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, orderList })
+      .post(`${process.env.REACT_APP_API_URL}/api/orders`, { userId, orderList, orderPlace })
       .then((response) => {
-        // Handle successful order submission
-        // toast.success("Suucessfully ordered", {
-        //   position: "bottom-center",
-        //   autoClose: 1000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: false,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
         navigate("/currentOrder");
       })
       .catch((error) => {
         console.error("Error submitting order:", error);
-        toast.error("Submission failed", {
+        toast.error(error.response.data.error, {
           position: "bottom-center",
-          autoClose: 1000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -175,7 +175,42 @@ function FoodMenu() {
           <h3 className="text-danger">You can't order right now</h3>
         </div>
       )}
-
+      {/* Confirmation Modal */}
+      <Modal show={showConfirmation} onHide={() => setShowConfirmation(false)} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Select Order Place
+          <div className="mt-3">
+            <div className="">
+              <button
+                className={`btn ${orderPlace === "Esaki" ? "btn-success" : "btn-secondary"} col-12 mb-2`}
+                onClick={() => setOrderPlace("Esaki")}
+              >
+                Esaki
+              </button>
+              <button
+                className={`btn ${orderPlace === "University" ? "btn-success" : "btn-secondary"}  col-12`}
+                onClick={() => setOrderPlace("University")}
+              >
+                University
+              </button>
+            </div>
+          </div>
+        </Modal.Body>
+        {orderPlace && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowConfirmation(false)}>
+              Cancel
+            </Button>
+            <Button variant="warning" onClick={handleConfirmSubmit}>
+              Confirm
+            </Button>
+          </Modal.Footer>
+        )}
+      </Modal>
+      <ToastContainer />
       <NavBar activeTab={"tab1"} />
     </>
   );

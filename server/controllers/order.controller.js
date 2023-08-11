@@ -4,12 +4,15 @@ const { createDebt } = require("../splitwise_api/splitwise");
 // Controller to create a new order
 const createOrder = async (req, res) => {
   try {
-    const { userId, orderList } = req.body;
+    const { userId, orderList, orderPlace } = req.body;
 
     // Check if there are any unfinished orders for the user
     const unfinishedOrder = await Order.findOne({ user: userId, isFinished: false });
 
     if (unfinishedOrder) {
+      if (unfinishedOrder.orderPlace !== orderPlace) {
+        return res.status(400).json({ error: "You already have an unfinished order from a different place" });
+      }
       // Add the new order items to the existing order list
       unfinishedOrder.orderList.push(
         ...orderList.map((orderItem) => ({
@@ -36,6 +39,7 @@ const createOrder = async (req, res) => {
           quantity: orderItem.quantity,
         })),
         orderNumber: nextOrderNumber,
+        orderPlace: orderPlace,
       });
 
       // Save the order document to the database
