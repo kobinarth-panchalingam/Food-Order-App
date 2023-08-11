@@ -28,13 +28,21 @@ function Orders() {
     <>
       <div className="container-fluid" {...swipeHandlers} style={{ marginBottom: 60 }}>
         <Greeting />
-        <div className=" d-flex flex-column align-items-center justify-content-center vh-100">
-          <Button variant="primary" onClick={handleEsakiClick} className="mb-3 col-12 h-25">
-            Esaki
-          </Button>
-          <Button variant="success" onClick={handleUniversityClick} className="col-12 h-25">
-            University
-          </Button>
+        <div className=" d-flex flex-column align-items-stretch justify-content-center">
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <button onClick={handleEsakiClick} className="btn btn-secondary p-4  mb-3 col-12">
+            <p className="fs-1">Esaki</p>
+          </button>
+          <button variant="success" onClick={handleUniversityClick} className="btn btn-secondary p-4 mb-3 col-12 ">
+            <p className="fs-1">University</p>
+          </button>
         </div>
         <NavBar activeTab={"tab3"} />
       </div>

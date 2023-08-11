@@ -122,7 +122,7 @@ function FoodMenu() {
       <div className="container-fluid swipe-element" {...swipeHandlers} style={{ marginBottom: 120 }}>
         <Guide />
         <Greeting />
-        <div className="text-center pb-2">
+        <div className="text-center pb-2 card">
           <Table striped bordered responsive>
             <thead>
               <tr>
