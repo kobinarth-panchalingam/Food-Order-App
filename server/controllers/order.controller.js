@@ -80,8 +80,10 @@ const getUnfinishedOrders = async (req, res) => {
 //controller to delete all unfinished orders
 const deleteUnfinishedOrders = async (req, res) => {
   try {
+    const { orderPlace } = req.body;
     const unfinishedOrders = await Order.deleteMany({
       isFinished: false,
+      orderPlace: orderPlace,
     });
     res.json(unfinishedOrders);
     console.log("Unfinished orders deleted successfully");
