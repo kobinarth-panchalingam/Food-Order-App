@@ -169,8 +169,8 @@ const finishOrder = async (req, res) => {
 const getCompletedOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
-
-    const orders = await Order.find({ user: userId, isFinished: true }).sort({ updatedAt: -1 }).populate("orderList.food");
+    //get last 10 finished order
+    const orders = await Order.find({ user: userId, isFinished: true }).limit(10).sort({ updatedAt: -1 }).populate("orderList.food");
 
     res.json(orders);
   } catch (error) {

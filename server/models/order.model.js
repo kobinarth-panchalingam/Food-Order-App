@@ -29,6 +29,7 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     // You can include additional fields like order date, total price, etc. based on your requirements
   },
   {
