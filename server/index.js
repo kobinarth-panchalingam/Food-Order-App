@@ -9,7 +9,7 @@ dotenv.config();
 const userRoutes = require("./routes/user.routes");
 const orderRoutes = require("./routes/order.routes");
 const foodRoutes = require("./routes/food.routes");
-
+const settingRoutes = require("./routes/setting.routes");
 // const nodes_route = require("./routes/nodes.route");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +22,7 @@ app.use("/api/users", userRoutes);
 // Order routes
 app.use("/api/orders", orderRoutes);
 app.use("/api/foods", foodRoutes);
+app.use("/api/settings", settingRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -34,6 +35,7 @@ mongoose
 
 const Food = require("./models/food.model");
 const User = require("./models/user.model");
+const Setting = require("./models/settings.model");
 
 const foodData = [
   {
@@ -121,7 +123,7 @@ const createAdmin = async () => {
 const updateAllUsersToUserRole = async () => {
   try {
     // Update all users to "user" role
-    await User.updateMany({}, { canOrder: false });
+    await Setting.create({ canOrderEsaki: false, canOrderUniversity: false });
 
     console.log("All users updated to 'user' role successfully.");
   } catch (error) {

@@ -32,7 +32,7 @@ function FoodSummary({ orderPlace }) {
         {user.role === "admin" && (
           <>
             <SplitPayer selectedPayer={selectedPayer} setSelectedPayer={setSelectedPayer} />
-            <OrderController />
+            <OrderController orderPlace={orderPlace} />
           </>
         )}
         <UserOrdersTable from={selectedPayer} orderPlace={orderPlace} />

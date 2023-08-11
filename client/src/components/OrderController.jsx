@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-const OrderController = () => {
+const OrderController = ({ orderPlace }) => {
   const [canOrder, setCanOrder] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -9,9 +9,9 @@ const OrderController = () => {
     // Fetch food data from backend server
     const localUser = JSON.parse(sessionStorage.getItem("user"));
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users?index=${localUser.index}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/settings`)
       .then((response) => {
-        setCanOrder(response.data.user.canOrder);
+        setCanOrder(response.data[0]["canOrder" + orderPlace]);
       })
       .catch((error) => {
         console.error("Error fetching food data:", error);
@@ -20,7 +20,7 @@ const OrderController = () => {
 
   const handleStartOrder = async () => {
     try {
-      await axios.patch(`${process.env.REACT_APP_API_URL}/api/users`, { type: "start" });
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/settings`, { type: "start", orderPlace: orderPlace });
       setCanOrder(true);
     } catch (error) {
       console.error("Failed to update permision", error);
@@ -28,10 +28,8 @@ const OrderController = () => {
   };
   const handleStopOrder = async () => {
     try {
-      axios.patch(`${process.env.REACT_APP_API_URL}/api/users`, { type: "stop" }).then((res) => {
-        console.log(res.message);
-        setCanOrder(false);
-      });
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/settings`, { type: "stop", orderPlace: orderPlace });
+      setCanOrder(false);
     } catch (error) {
       console.error("Failed to update permision", error);
     }
@@ -53,11 +51,11 @@ const OrderController = () => {
       <div className="p-2 row border">
         {!canOrder ? (
           <Button onClick={handleStartOrder} variant="success">
-            Start Ordering
+            Grant Order Permission
           </Button>
         ) : (
           <Button onClick={handleStopOrder} variant="danger">
-            Stop Ordering
+            Revoke Order Permission
           </Button>
         )}
       </div>

@@ -33,12 +33,11 @@ function FoodMenu() {
       .catch((error) => {
         console.error("Error fetching food data:", error);
       });
-
-    const localUser = JSON.parse(sessionStorage.getItem("user"));
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users?index=${localUser.index}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/settings`)
       .then((response) => {
-        setCanOrder(response.data.user.canOrder);
+        console.log(response.data[0]);
+        setCanOrder(response.data[0]);
       })
       .catch((error) => {
         console.error("Error fetching food data:", error);
@@ -153,8 +152,7 @@ function FoodMenu() {
           </Table>
         </div>
       </div>
-
-      {canOrder ? (
+      {canOrder.canOrderEsaki || canOrder.canOrderUniversity ? (
         <div className="container-fluid bg-white text-dark text-center position-fixed p-2 " style={{ bottom: 60 }}>
           <div className="row">
             <div className="col-6 ">
@@ -185,12 +183,14 @@ function FoodMenu() {
           <div className="mt-3">
             <div className="">
               <button
+                hidden={!canOrder.canOrderEsaki}
                 className={`btn ${orderPlace === "Esaki" ? "btn-success" : "btn-secondary"} col-12 mb-2`}
                 onClick={() => setOrderPlace("Esaki")}
               >
                 Esaki
               </button>
               <button
+                hidden={!canOrder.canOrderUniversity}
                 className={`btn ${orderPlace === "University" ? "btn-success" : "btn-secondary"}  col-12`}
                 onClick={() => setOrderPlace("University")}
               >
