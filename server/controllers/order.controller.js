@@ -117,6 +117,10 @@ const deleteOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
+    if (foodId === "all") {
+      await Order.findByIdAndDelete(orderId);
+      return res.json({ message: "Order deleted successfully" });
+    }
     // Find the index of the food item in the order's orderList
     const foodIndex = order.orderList.findIndex((item) => item._id.toString() === foodId);
 

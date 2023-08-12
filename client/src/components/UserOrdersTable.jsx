@@ -9,16 +9,11 @@ function UserOrdersTable({ from, orderPlace }) {
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
   const [offerPrice, setOfferPrice] = useState(0);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/orders`)
-      .then((response) => {
-        const userOrders = getUserOrders(response.data);
-        setUserOrders(userOrders);
-      })
-      .catch((error) => {
-        console.error("Error fetching order data:", error);
-      });
+    getUserOrders().then((userOrders) => {
+      setUserOrders(userOrders);
+    });
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/users/all`)
       .then((response) => {
@@ -30,9 +25,9 @@ function UserOrdersTable({ from, orderPlace }) {
       });
   }, []);
 
-  const getUserOrders = (orders) => {
+  const getUserOrders = async () => {
+    const orders = (await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`)).data;
     const userOrderMap = {};
-
     orders
       .filter((userOrder) => userOrder.orderPlace === orderPlace)
       .forEach((order) => {
@@ -60,20 +55,8 @@ function UserOrdersTable({ from, orderPlace }) {
           }
         });
       });
-
     return Object.values(userOrderMap);
   };
-
-  const handleFinishOrder = () => {
-    if (isFinishingOrder) {
-      // If finishing order API call is already in progress, return early
-      return;
-    }
-
-    // Open the confirmation modal
-    setConfirmationModalOpen(true);
-  };
-
   const confirmFinishOrder = () => {
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
     const splitwiseData = userOrders.map((userOrder) => {
@@ -112,6 +95,16 @@ function UserOrdersTable({ from, orderPlace }) {
   const cancelFinishOrder = () => {
     // Close the confirmation modal
     setConfirmationModalOpen(false);
+  };
+  const handleFinishOrder = () => {
+    if (isFinishingOrder) {
+      // If finishing order API call is already in progress, return early
+      return;
+    }
+
+    // Open the confirmation modal
+
+    setConfirmationModalOpen(true);
   };
 
   // Find users who haven't ordered yet
@@ -186,7 +179,7 @@ function UserOrdersTable({ from, orderPlace }) {
           <Modal.Title>Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure the selected payer details are correct?</p>
+          <p>Are you sure the payer details are correct?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancelFinishOrder}>
