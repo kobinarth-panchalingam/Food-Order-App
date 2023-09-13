@@ -2,24 +2,19 @@ const Splitwise = require("splitwise");
 const sw = Splitwise({
   consumerKey: process.env.CONSUMER_KEY,
   consumerSecret: process.env.CONSUMER_SECRET,
-  accessToken: process.env.ACCESS_TOKEN,
-  api_key: process.env.API_KEY,
 });
 
 const group_id = process.env.GROUP_ID;
 
-async function createDebt(from, to, description, amount) {
+async function createDebt(shares, description, amount) {
   try {
-    if (to != from) {
-      const debt = await sw.createDebt({
-        from: from,
-        to: to,
-        group_id: group_id,
-        description: description,
-        amount: amount,
-      });
-      return debt;
-    }
+    sw.createExpense({
+      group_id: group_id,
+      description: description,
+      cost: amount,
+      users: shares,
+    });
+
     return;
   } catch (error) {
     console.error(error);

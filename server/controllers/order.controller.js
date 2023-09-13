@@ -151,28 +151,49 @@ const deleteOrder = async (req, res) => {
 const finishOrder = async (req, res) => {
   try {
     const { splitwiseData, from, offerPrice } = req.body;
-    discount = offerPrice / splitwiseData.length;
-    for (const data of splitwiseData) {
-      const { orderId, description } = data;
-      const updatedOrder = await Order.findByIdAndUpdate(orderId, { isFinished: true }, { new: true }).populate("orderList.food").populate("user");
-      if (!updatedOrder) {
-        return res.status(404).json({ error: `Order with ID ${orderId} not found` });
-      }
-      let totalPrice = 0;
-      updatedOrder.orderList.forEach((orderItem) => {
-        totalPrice += orderItem.food.price * orderItem.quantity;
-      });
-      totalPrice = totalPrice - discount;
-      const firstName = updatedOrder.user.name.split(" ")[0];
-      const newDescription = `${firstName}-${description}`;
-      // Call the createDebt function with the necessary parameters
-      await createDebt(from, updatedOrder.user.splitwiseId, newDescription, totalPrice);
-    }
+    const discount = offerPrice ? Math.floor(offerPrice / splitwiseData.length) : 0;
+    const orderIds = splitwiseData.map((data) => data.orderId);
+    const orders = await Order.find({ _id: { $in: orderIds } })
+      .populate("orderList.food")
+      .populate("user")
+      .lean();
 
+    var amount = 0;
+    const shares = orders
+      .map((order) => {
+        const totalPrice = order.orderList.reduce((acc, orderItem) => acc + orderItem.food.price * orderItem.quantity, 0);
+        order.totalPrice = totalPrice - discount;
+        amount += order.totalPrice;
+        return order;
+      })
+      .map((order) => {
+        return {
+          user_id: order.user.splitwiseId,
+          paid_share: order.user.splitwiseId === Number(from) ? amount : 0,
+          owed_share: order.totalPrice,
+        };
+      });
+
+    // Perform a bulk update to update all the orders at once
+    const bulkUpdateOps = orders.map((order) => ({
+      updateOne: {
+        filter: { _id: order._id },
+        update: {
+          $set: {
+            isFinished: true,
+          },
+        },
+      },
+    }));
+
+    await Order.bulkWrite(bulkUpdateOps);
+
+    const description = "Dinner " + orders[0].orderPlace;
+    await createDebt(shares, description, amount);
     res.json({ message: "Orders finished successfully" });
   } catch (error) {
     console.error("Error finishing orders:", error);
-    res.status(500).json({ error: "Failed to finish orders" });
+    res.status(500).json({ error: error.message });
   }
 };
 

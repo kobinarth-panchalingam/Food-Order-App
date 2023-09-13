@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Modal } from "react-bootstrap";
-
+import { ToastContainer, toast } from "react-toastify";
 function UserOrdersTable({ from, orderPlace }) {
   const [userOrders, setUserOrders] = useState([]);
   const [users, setUsers] = useState([]);
@@ -75,14 +75,14 @@ function UserOrdersTable({ from, orderPlace }) {
           .then((response) => {
             const updatedUserOrders = getUserOrders(response.data);
             setUserOrders(updatedUserOrders);
-            console.log("Orders finished successfully");
+            toast.success("Order finished successfully");
           })
           .catch((error) => {
-            console.error("Error fetching order data:", error);
+            toast.error("Error");
           });
       })
       .catch((error) => {
-        console.error("Error finishing orders:", error);
+        console.error(error);
       })
       .finally(() => {
         setIsFinishingOrder(false); // Reset the flag after finishing order API call is complete
@@ -190,6 +190,19 @@ function UserOrdersTable({ from, orderPlace }) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 }
