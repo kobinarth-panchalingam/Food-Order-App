@@ -122,6 +122,10 @@ We welcome contributions from the open-source community. If you'd like to contri
 3. Make your changes and test thoroughly.
 4. Create a pull request with a clear description of your changes.
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
 ## Contact
 
 For questions, feedback, or support, please contact Kobinarth Panchalingam at kobinarth22@gmail.com.
