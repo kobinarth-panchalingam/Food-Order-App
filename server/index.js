@@ -36,6 +36,7 @@ mongoose
 const Food = require("./models/food.model");
 const User = require("./models/user.model");
 const Setting = require("./models/settings.model");
+const Order = require("./models/order.model");
 
 const foodData = [
   {
@@ -136,6 +137,22 @@ const updateAllUsersToUserRole = async () => {
 
 // seedFoodData();
 // createAdmin();
+
+// Sort the documents by createdAt in descending order and limit to the last 10
+// const run = async () => {
+//   const last10Orders = await Order.find().sort({ createdAt: -1 }).limit(9);
+
+//   // Update the isFinished field for the last 10 orders
+//   const updatedOrders = await Promise.all(
+//     last10Orders.map(async (order) => {
+//       order.isFinished = false;
+//       return order.save();
+//     })
+//   );
+
+//   console.log(updatedOrders);
+// };
+// run();
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("Server started on port 5000");

@@ -159,6 +159,7 @@ const finishOrder = async (req, res) => {
       .lean();
 
     var amount = 0;
+    let users = [];
     const shares = orders
       .map((order) => {
         const totalPrice = order.orderList.reduce((acc, orderItem) => acc + orderItem.food.price * orderItem.quantity, 0);
@@ -167,12 +168,21 @@ const finishOrder = async (req, res) => {
         return order;
       })
       .map((order) => {
+        users.push(order.user.splitwiseId);
         return {
           user_id: order.user.splitwiseId,
           paid_share: order.user.splitwiseId === Number(from) ? amount : 0,
           owed_share: order.totalPrice,
         };
       });
+
+    if (!users.includes(from)) {
+      shares.push({
+        user_id: from,
+        paid_share: amount,
+        owed_share: 0,
+      });
+    }
 
     // Perform a bulk update to update all the orders at once
     const bulkUpdateOps = orders.map((order) => ({
@@ -186,10 +196,15 @@ const finishOrder = async (req, res) => {
       },
     }));
 
-    await Order.bulkWrite(bulkUpdateOps);
+    try {
+      const description = "Dinner " + orders[0].orderPlace;
+      await createDebt(shares, description, amount);
+      await Order.bulkWrite(bulkUpdateOps);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
 
-    const description = "Dinner " + orders[0].orderPlace;
-    await createDebt(shares, description, amount);
     res.json({ message: "Orders finished successfully" });
   } catch (error) {
     console.error("Error finishing orders:", error);
