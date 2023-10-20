@@ -83,6 +83,7 @@ function UserOrdersTable({ from, orderPlace }) {
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Error");
       })
       .finally(() => {
         setIsFinishingOrder(false); // Reset the flag after finishing order API call is complete

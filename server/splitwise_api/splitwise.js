@@ -8,7 +8,7 @@ const group_id = process.env.GROUP_ID;
 
 async function createDebt(shares, description, amount) {
   try {
-    sw.createExpense({
+    await sw.createExpense({
       group_id: group_id,
       description: description,
       cost: amount,

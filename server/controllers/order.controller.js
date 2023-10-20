@@ -168,7 +168,7 @@ const finishOrder = async (req, res) => {
         return order;
       })
       .map((order) => {
-        users.push(order.user.splitwiseId);
+        users.push(String(order.user.splitwiseId));
         return {
           user_id: order.user.splitwiseId,
           paid_share: order.user.splitwiseId === Number(from) ? amount : 0,

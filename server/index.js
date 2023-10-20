@@ -140,7 +140,7 @@ const updateAllUsersToUserRole = async () => {
 
 // Sort the documents by createdAt in descending order and limit to the last 10
 // const run = async () => {
-//   const last10Orders = await Order.find().sort({ createdAt: -1 }).limit(9);
+//   const last10Orders = await Order.find().sort({ createdAt: -1 }).limit(7);
 
 //   // Update the isFinished field for the last 10 orders
 //   const updatedOrders = await Promise.all(
