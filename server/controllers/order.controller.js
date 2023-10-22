@@ -169,14 +169,14 @@ const finishOrder = async (req, res) => {
       })
       .map((order) => {
         users.push(String(order.user.splitwiseId));
+        console.log(order);
         return {
           user_id: order.user.splitwiseId,
           paid_share: order.user.splitwiseId === Number(from) ? amount : 0,
           owed_share: order.totalPrice,
         };
       });
-
-    if (!users.includes(from)) {
+    if (!users.includes(String(from))) {
       shares.push({
         user_id: from,
         paid_share: amount,
@@ -199,7 +199,7 @@ const finishOrder = async (req, res) => {
     try {
       const description = "Dinner " + orders[0].orderPlace;
       await createDebt(shares, description, amount);
-      await Order.bulkWrite(bulkUpdateOps);
+      await Order.bulskWrite(bulkUpdateOps);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: error.message });
