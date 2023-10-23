@@ -199,7 +199,7 @@ const finishOrder = async (req, res) => {
     try {
       const description = "Dinner " + orders[0].orderPlace;
       await createDebt(shares, description, amount);
-      await Order.bulskWrite(bulkUpdateOps);
+      await Order.bulkWrite(bulkUpdateOps);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: error.message });
