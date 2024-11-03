@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const {
-    recordUsage,
+    addUsageRecord,
     getUsageRecords
 } = require('../controllers/usageRecord.controller');
 
-// Usage Record routes
-router.post('/', recordUsage);
 router.get('/:groupId', getUsageRecords);
+router.post('/:groupId', addUsageRecord);
 
 module.exports = router;

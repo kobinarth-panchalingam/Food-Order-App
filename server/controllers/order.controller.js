@@ -1,5 +1,5 @@
 const Order = require("../models/order.model");
-const { createDebt } = require("../splitwise_api/splitwise");
+const { createDebt } = require("../utils/splitwise");
 
 // Controller to create a new order
 const createOrder = async (req, res) => {
@@ -57,7 +57,8 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find();
-    res.json(orders);
+
+    res.status(200).json(orders);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -70,7 +71,8 @@ const getUnfinishedOrders = async (req, res) => {
     })
       .populate("orderList.food")
       .populate("user");
-    res.json(unfinishedOrders);
+
+    res.status(200).json(unfinishedOrders);
   } catch (error) {
     console.error("Error fetching unfinished orders:", error);
     res.status(500).json({ error: "Failed to fetch unfinished orders" });
@@ -81,12 +83,13 @@ const getUnfinishedOrders = async (req, res) => {
 const deleteUnfinishedOrders = async (req, res) => {
   try {
     const { orderPlace } = req.body;
+
     const unfinishedOrders = await Order.deleteMany({
       isFinished: false,
       orderPlace: orderPlace,
     });
-    res.json(unfinishedOrders);
-    console.log("Unfinished orders deleted successfully");
+
+    res.status(200).json(unfinishedOrders);
   } catch (error) {
     console.error("Error deleting unfinished orders:", error);
     res.status(500).json({ error: "Failed to delete unfinished orders" });
@@ -96,11 +99,13 @@ const deleteUnfinishedOrders = async (req, res) => {
 const getUnfinishedOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
+
     const unfinishedOrders = await Order.find({
       user: userId,
       isFinished: false,
     }).populate("orderList.food");
-    res.json(unfinishedOrders);
+
+    res.status(200).json(unfinishedOrders);
   } catch (error) {
     console.error("Error fetching unfinished orders by user:", error);
     res.status(500).json({ error: "Failed to fetch unfinished orders by user" });
@@ -141,7 +146,7 @@ const deleteOrder = async (req, res) => {
     // Save the updated order
     await order.save();
 
-    res.json({ message: "Food item deleted successfully", order });
+    res.status(200).json({ message: "Food item deleted successfully", order });
   } catch (error) {
     console.error("Error deleting food item:", error);
     res.status(500).json({ error: "Failed to delete food item" });
@@ -151,6 +156,7 @@ const deleteOrder = async (req, res) => {
 const finishOrder = async (req, res) => {
   try {
     const { splitwiseData, from, offerPrice } = req.body;
+
     const discount = offerPrice ? Math.floor(offerPrice / splitwiseData.length) : 0;
     const orderIds = splitwiseData.map((data) => data.orderId);
     const orders = await Order.find({ _id: { $in: orderIds } })
@@ -169,7 +175,6 @@ const finishOrder = async (req, res) => {
       })
       .map((order) => {
         users.push(String(order.user.splitwiseId));
-        console.log(order);
         return {
           user_id: order.user.splitwiseId,
           paid_share: order.user.splitwiseId === Number(from) ? amount : 0,
@@ -205,7 +210,7 @@ const finishOrder = async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
 
-    res.json({ message: "Orders finished successfully" });
+    res.status(200).json({ message: "Orders finished successfully" });
   } catch (error) {
     console.error("Error finishing orders:", error);
     res.status(500).json({ error: error.message });
@@ -218,7 +223,7 @@ const getCompletedOrdersByUser = async (req, res) => {
     //get last 10 finished order
     const orders = await Order.find({ user: userId, isFinished: true }).limit(10).sort({ updatedAt: -1 }).populate("orderList.food");
 
-    res.json(orders);
+    res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: "Error fetching completed orders" });
   }

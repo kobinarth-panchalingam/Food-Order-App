@@ -5,10 +5,6 @@ const productGroupSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    products: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-    }],
     userIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -18,5 +14,14 @@ const productGroupSchema = new mongoose.Schema({
     collection: 'ProductGroup',
     timestamps: true
 });
+
+productGroupSchema.virtual('products', {
+    ref: 'Product',
+    localField: '_id',
+    foreignField: 'groupId'
+});
+
+productGroupSchema.set('toJSON', { virtuals: true });
+productGroupSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('ProductGroup', productGroupSchema);

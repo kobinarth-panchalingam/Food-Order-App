@@ -10,6 +10,7 @@ const updateOrderPermision = async (req, res) => {
     if (orderPlace === "University") {
       type === "start" ? await Settings.updateMany({}, { canOrderUniversity: true }) : await Settings.updateMany({}, { canOrderUniversity: false });
     }
+
     res.status(200).json({ message: "Order permission updated" });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -19,6 +20,7 @@ const updateOrderPermision = async (req, res) => {
 const getOrderPermision = async (req, res) => {
   try {
     const settings = await Settings.find({}).limit(1);
+
     res.status(200).json(settings);
   } catch (error) {
     res.status(400).json({ error: error.message });
