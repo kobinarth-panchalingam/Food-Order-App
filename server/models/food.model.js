@@ -1,22 +1,16 @@
 const mongoose = require("mongoose");
 
-const foodSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    // You can include additional fields like an image URL, category, etc. based on your requirements
+const foodSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
   },
-  {
-    collection: "Food", // Specify the desired collection name
-  }
-);
+  price: {
+    type: Number,
+    required: true,
+  },
+}, {
+  collection: "Food"
+});
 
-const Food = mongoose.model("Food", foodSchema);
-
-module.exports = Food;
+module.exports = mongoose.model("Food", foodSchema);;

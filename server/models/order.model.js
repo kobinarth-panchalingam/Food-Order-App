@@ -1,47 +1,41 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    orderList: [
-      {
-        food: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Food",
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-    orderNumber: {
-      type: Number,
-      default: 1,
-      required: true,
-    },
-    isFinished: {
-      type: Boolean,
-      default: false,
-    },
-    orderPlace: {
-      type: String,
-      enum: ["Esaki", "University"],
-      default: "Esaki",
-    },
-    // You can include additional fields like order date, total price, etc. based on your requirements
+const orderSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  {
-    collection: "Order", // Specify the desired collection name
-    timestamps: true, // Add timestamps for createdAt and updatedAt fields
+  orderList: [
+    {
+      food: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Food",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  orderNumber: {
+    type: Number,
+    default: 1,
+    required: true,
+  },
+  isFinished: {
+    type: Boolean,
+    default: false,
+  },
+  orderPlace: {
+    type: String,
+    enum: ["Esaki", "University"],
+    default: "Esaki",
   }
-);
+}, {
+  collection: "Order",
+  timestamps: true,
+});
 
-const Order = mongoose.model("Order", orderSchema);
-
-module.exports = Order;
+module.exports = mongoose.model("Order", orderSchema);;
