@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const productGroupSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -6,8 +8,14 @@ const productGroupSchema = new mongoose.Schema({
     products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
+    }],
+    userIds: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }]
 }, {
+    collection: 'ProductGroup',
     timestamps: true
 });
 

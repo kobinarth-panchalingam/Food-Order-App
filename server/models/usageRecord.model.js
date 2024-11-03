@@ -16,6 +16,7 @@ const UsageRecordSchema = new mongoose.Schema({
         default: Date.now
     }
 }, {
+    collection: 'UsageRecord',
     timestamps: true
 });
 

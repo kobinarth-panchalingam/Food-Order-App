@@ -3,7 +3,6 @@ const Settings = require("../models/settings.model");
 const updateOrderPermision = async (req, res) => {
   const { type, orderPlace } = req.body;
   try {
-    // type === "start" ? await User.updateMany({}, { canOrder: true }) : await User.updateMany({}, { canOrder: false });
     if (orderPlace === "Esaki") {
       type === "start" ? await Settings.updateMany({}, { canOrderEsaki: true }) : await Settings.updateMany({}, { canOrderEsaki: false });
     }
