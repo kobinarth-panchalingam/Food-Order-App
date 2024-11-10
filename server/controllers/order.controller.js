@@ -153,6 +153,7 @@ const deleteOrder = async (req, res) => {
   }
 };
 
+// TODO: have to refactor
 const finishOrder = async (req, res) => {
   try {
     const { splitwiseData, from, offerPrice } = req.body;
