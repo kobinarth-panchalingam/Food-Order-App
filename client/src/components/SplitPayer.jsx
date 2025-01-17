@@ -1,11 +1,13 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-const PayerSelection = ({ selectedPayer, setSelectedPayer }) => {
+import React, { useEffect, useState } from "react";
+
+function PayerSelection ({ selectedPayer, setSelectedPayer }) {
   const [members, setMembers] = useState([]);
+  
   useEffect(() => {
     const fetchEmails = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/all`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users`);
         const members = response.data.map((member) => ({ name: member.name, splitwiseId: member.splitwiseId }));
         setMembers(members);
       } catch (error) {

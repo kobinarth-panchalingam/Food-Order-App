@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { Row, Col, Container } from "react-bootstrap";
-import OrderCard from "../components/OrderCard";
-import NavBar from "../components/NavBar";
-import { useSwipeable } from "react-swipeable";
+import { useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
+import { toast } from "react-toastify";
 import Greeting from "../components/Greeting";
+import NavBar from "../components/NavBar";
+import OrderCard from "../components/OrderCard";
 
 function PastOrders() {
   const [pastOrders, setPastOrders] = useState([]);
@@ -14,14 +15,14 @@ function PastOrders() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/orders/completed/user/${user._id}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/orders/${user._id}?isFinished=true`)
       .then((response) => {
         setPastOrders(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching past orders:", error);
+        toast.error("Error fetching past orders:", error.message);
       });
-  }, []);
+  }, [user._id]);
 
   const handleExpandOrder = (orderId) => {
     setPastOrders((prevPastOrders) =>
@@ -39,10 +40,9 @@ function PastOrders() {
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      // Handle swipe left to navigate to the next tab
+      navigate("/pastOrders");
     },
     onSwipedRight: () => {
-      // Handle swipe right to navigate to the previous tab
       navigate("/allOrders");
     },
     swipeDuration: 250,

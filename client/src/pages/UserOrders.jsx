@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "react-bootstrap";
-import { useSwipeable } from "react-swipeable";
+import { useEffect, useState } from "react";
+import { Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
+import { toast } from "react-toastify";
 import Greeting from "../components/Greeting";
 import NavBar from "../components/NavBar";
 
@@ -14,44 +15,38 @@ function UserOrders() {
   useEffect(() => {
     // Fetch user-specific orders from backend server
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/orders/user/${user._id}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/orders/${user._id}?isFinished=false`)
       .then((response) => {
         setOrders(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching user orders:", error);
+        toast.error("Error fetching user orders:", error.message);
       });
-  }, [orders]);
+  }, [user._id]);
 
   const handleDeleteFoodItem = (orderId, foodId) => {
-    // Send delete request to the backend server
     axios
       .delete(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}/food/${foodId}`)
       .then((response) => {
-        // Handle successful food item deletion
-        console.log("Food item deleted successfully:", response.data);
-        // Update the state to remove the deleted food item
-        setOrders((prevOrders) =>
-          prevOrders.map((order) => {
-            if (order._id === orderId) {
-              order.orderList = order.orderList.filter((item) => item._id !== foodId);
-            }
-            return order;
-          })
-        );
+        const updatedOrders = orders.map((order) => {
+          if (order._id === orderId) {
+            order.orderList = order.orderList.filter((item) => item._id !== foodId);
+          }
+          return order;
+        });
+        setOrders(updatedOrders);
+        toast.success("Food item deleted successfully:", response.data);
       })
       .catch((error) => {
-        console.error("Error deleting food item:", error);
+        toast.error("Error deleting food item:", error.message);
       });
   };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      // Handle swipe left to navigate to the next tab
       navigate("/allOrders");
     },
     onSwipedRight: () => {
-      // Handle swipe right to navigate to the previous tab
       navigate("/foodMenu");
     },
     swipeDuration: 250,

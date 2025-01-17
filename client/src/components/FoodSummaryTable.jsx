@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
 function FoodSummaryTable({ orderPlace }) {
@@ -8,16 +8,15 @@ function FoodSummaryTable({ orderPlace }) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/orders`)
+      .get(`${process.env.REACT_APP_API_URL}/api/orders?isFinished=false&orderPlace=${orderPlace}`)
       .then((response) => {
-        const summary = calculateFoodSummary(response.data);
-        setFoodSummary(summary);
+        setFoodSummary(calculateFoodSummary(response.data));
         setShow(true);
       })
       .catch((error) => {
         console.error("Error fetching order data:", error);
       });
-  }, []);
+  }, [orderPlace]);
 
   const calculateFoodSummary = (orders) => {
     const summary = {};
@@ -28,7 +27,6 @@ function FoodSummaryTable({ orderPlace }) {
     let totalPrice = 0;
 
     orders
-      .filter((userOrder) => userOrder.orderPlace === orderPlace)
       .forEach((order) => {
         const { orderList, user } = order;
 

@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
-const EditProfile = () => {
+function EditProfile () {
   return (
     <div className="relative rounded bg-bg shadow-[0px_1px_13px_rgba(0,_0,_0,_0.05)] w-[870px] h-[630px] overflow-hidden text-left text-base text-text2 font-title-16px-medium">
       <h3 className="m-0 absolute top-[40px] left-[80px] text-xl leading-[28px] font-medium font-inherit text-button2">Edit Your Profile</h3>

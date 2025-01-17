@@ -1,19 +1,16 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button, Modal } from "react-bootstrap";
-import "../styles/style.css";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import { useSwipeable } from "react-swipeable";
+import { useEffect, useState } from "react";
+import { Button, Modal, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import Guide from "../components/Guide";
+import { useSwipeable } from "react-swipeable";
+import { toast } from "react-toastify";
 import Greeting from "../components/Greeting";
+import NavBar from "../components/NavBar";
 
 function FoodMenu() {
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [foods, setFoods] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const user = JSON.parse(sessionStorage.getItem("user"));
   const [canOrder, setCanOrder] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [orderPlace, setOrderPlace] = useState("");
@@ -31,23 +28,22 @@ function FoodMenu() {
         setFoods(updatedFoods);
       })
       .catch((error) => {
-        console.error("Error fetching food data:", error);
+        toast.error("Error fetching food data:", error);
       });
+
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/settings`)
       .then((response) => {
-        console.log(response.data[0]);
         setCanOrder(response.data[0]);
       })
       .catch((error) => {
-        console.error("Error fetching food data:", error);
+        toast.error("Error fetching food data:", error);
       });
   }, []);
 
   useEffect(() => {
     // Calculate total price
-    const orderTotal = foods.reduce((total, food) => total + food.price * food.quantity, 0);
-    setTotalPrice(orderTotal);
+    setTotalPrice(foods.reduce((total, food) => total + food.price * food.quantity, 0));
   }, [foods]);
 
   const handleIncrement = (food) => {
@@ -90,16 +86,7 @@ function FoodMenu() {
       })
       .catch((error) => {
         console.error("Error submitting order:", error);
-        toast.error(error.response.data.error, {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(error.response.data.error);
       });
 
     const resetFoods = foods.map((food) => ({ ...food, quantity: 0 }));
@@ -108,11 +95,10 @@ function FoodMenu() {
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      // Handle swipe left to navigate to the next tab
       navigate("/currentOrder");
     },
     onSwipedRight: () => {
-      // Handle swipe right to navigate to the previous tab
+      navigate("/foodMenu");
     },
     swipeDuration: 250,
   });
@@ -120,7 +106,6 @@ function FoodMenu() {
   return (
     <>
       <div className="container-fluid swipe-element" {...swipeHandlers} style={{ marginBottom: 120 }}>
-        <Guide />
         <Greeting />
         <div className="text-center pb-2 card">
           <Table striped bordered responsive>
@@ -160,7 +145,7 @@ function FoodMenu() {
             </div>
 
             <div className="col-6">
-              <div class="d-grid gap-1">
+              <div className="d-grid gap-1">
                 <button disabled={totalPrice === 0} className="btn btn-warning" onClick={handleOrderSubmit} type="button" block>
                   Submit
                 </button>
@@ -210,7 +195,6 @@ function FoodMenu() {
           </Modal.Footer>
         )}
       </Modal>
-      <ToastContainer />
       <NavBar activeTab={"tab1"} />
     </>
   );

@@ -4,12 +4,12 @@ const sw = Splitwise({
     consumerSecret: process.env.CONSUMER_SECRET,
 });
 
-const group_id = process.env.GROUP_ID;
+const GROUP_ID = process.env.GROUP_ID;
 
 const createDebt = async (shares, description, amount) => {
     try {
         await sw.createExpense({
-            group_id: group_id,
+            group_id: GROUP_ID,
             description: description,
             cost: amount,
             users: shares,
@@ -24,7 +24,7 @@ const createDebt = async (shares, description, amount) => {
 
 const fetchMemberEmails = async () => {
     try {
-        const group = await sw.getGroup({ id: group_id });
+        const group = await sw.getGroup({ id: GROUP_ID });
         const memberEmails = group.members.map((member) => ({ email: member.email, id: member.id }));
         return memberEmails;
     } catch (error) {

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Joyride, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 
 const Guide = () => {
-  const run = sessionStorage.getItem("run");
-  const [runTutorial, setRunTutorial] = useState(false); //need to change this code
+  const [runTutorial, setRunTutorial] = useState(true); //need to change this code
   const [stepIndex, setStepIndex] = useState(0);
 
   const steps = [
@@ -18,7 +17,6 @@ const Guide = () => {
       content: "Welcome to the Order Here page! Click here to place an order.",
       placement: "top",
     },
-
     {
       target: ".current-order",
       content: "This is the Current Order page. Check your ongoing orders here.",
@@ -56,7 +54,6 @@ const Guide = () => {
 
   return (
     <>
-      {/* Render the Joyride component */}
       <Joyride
         steps={steps}
         run={runTutorial}

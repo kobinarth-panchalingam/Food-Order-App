@@ -1,13 +1,14 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-const OrderController = ({ orderPlace }) => {
+import { toast } from "react-toastify";
+
+function OrderController ({ orderPlace }) {
   const [canOrder, setCanOrder] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  console.log(orderPlace);
+
   useEffect(() => {
     // Fetch food data from backend server
-    const localUser = JSON.parse(sessionStorage.getItem("user"));
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/settings`)
       .then((response) => {
@@ -16,31 +17,32 @@ const OrderController = ({ orderPlace }) => {
       .catch((error) => {
         console.error("Error fetching food data:", error);
       });
-  }, []);
+  }, [orderPlace]);
 
   const handleStartOrder = async () => {
     try {
       await axios.patch(`${process.env.REACT_APP_API_URL}/api/settings`, { type: "start", orderPlace: orderPlace });
       setCanOrder(true);
     } catch (error) {
-      console.error("Failed to update permision", error);
+      toast.error("Failed to update permision", error.message);
     }
   };
+  
   const handleStopOrder = async () => {
     try {
       await axios.patch(`${process.env.REACT_APP_API_URL}/api/settings`, { type: "stop", orderPlace: orderPlace });
       setCanOrder(false);
     } catch (error) {
-      console.error("Failed to update permision", error);
+      toast.error("Failed to update permision", error.message);
     }
   };
 
   const handleConfirmDelete = async () => {
     try {
-      const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/orders`, { data: { orderPlace: orderPlace } });
-      console.log("Successfully deleted unfinished orders");
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/orders`, { data: { orderPlace: orderPlace } });
+      toast.success("Successfully deleted unfinished orders");
     } catch (error) {
-      console.error("Error deleting unfinished orders:", error);
+      toast.error("Error deleting unfinished orders:", error);
     } finally {
       setShowModal(false); // Close the modal after the deletion is complete or if there's an error
     }

@@ -15,7 +15,7 @@ const createUser = async (req, res) => {
     const memberEmails = await fetchMemberEmails();
     const foundMember = memberEmails.find((member) => member.email === splitwiseEmail);
     if (!foundMember) {
-      res.status(201).json({ message: "You are not a member of the group" });
+      return res.status(404).json({ message: "You are not a member of the group" });
     }
 
     // User does not exist, proceed to create and save the new user
@@ -31,10 +31,10 @@ const createUser = async (req, res) => {
 
 
 const getUserByIndex = async (req, res) => {
-  const { index } = req.query;
+  const index = req.params.index;
 
   try {
-    const user = await User.findOne({ index });
+    const user = await User.findOne({ index: index });
 
     if (!user) {
       return res.status(200).json({ message: "User not found" });

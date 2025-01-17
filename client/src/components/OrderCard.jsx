@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, Button, Row, Col } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 
-const OrderCard = ({ order, expanded, onToggleExpand }) => {
+function OrderCard ({ order, expanded, onToggleExpand }) {
   const { _id, updatedAt, orderList } = order;
   const formattedDateTime = new Date(updatedAt).toLocaleString("en-US", {
     year: "numeric",
@@ -16,12 +16,7 @@ const OrderCard = ({ order, expanded, onToggleExpand }) => {
   };
 
   const calculateTotalPrice = () => {
-    let totalPrice = 0;
-
-    orderList.forEach((orderItem) => {
-      totalPrice += orderItem.food.price * orderItem.quantity;
-    });
-
+    const totalPrice = orderList.reduce((sum, orderItem) => sum + orderItem.food.price * orderItem.quantity, 0);    
     return totalPrice.toFixed(2);
   };
 
@@ -42,7 +37,6 @@ const OrderCard = ({ order, expanded, onToggleExpand }) => {
               ))}
             </ul>
             <strong>Total Price:</strong> Rs. {calculateTotalPrice()}
-            {/* Additional expanded content goes here */}
           </>
         ) : (
           <>

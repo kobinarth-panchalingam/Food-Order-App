@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button, Modal } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { Button, Modal, Table } from "react-bootstrap";
+import { toast } from "react-toastify";
+
 function UserOrdersTable({ from, orderPlace }) {
-  const [userOrders, setUserOrders] = useState([]);
-  const [users, setUsers] = useState([]);
   const user = JSON.parse(sessionStorage.getItem("user"));
+  const [users, setUsers] = useState([]);
+  const [userOrders, setUserOrders] = useState([]);
   const [isFinishingOrder, setIsFinishingOrder] = useState(false); // Flag to track API call status
   const [offerPrice, setOfferPrice] = useState(0);
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
@@ -14,8 +15,9 @@ function UserOrdersTable({ from, orderPlace }) {
     getUserOrders().then((userOrders) => {
       setUserOrders(userOrders);
     });
+    
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users/all`)
+      .get(`${process.env.REACT_APP_API_URL}/api/users`)
       .then((response) => {
         const allUsers = response.data.map((user) => user.name);
         setUsers(allUsers);
@@ -23,15 +25,14 @@ function UserOrdersTable({ from, orderPlace }) {
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, []);
+  }, [orderPlace]);
 
   const getUserOrders = async () => {
-    const orders = (await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`)).data;
+    const orders = (await axios.get(`${process.env.REACT_APP_API_URL}/api/orders?isFinished=false&orderPlace=${orderPlace}`)).data;
     const userOrderMap = {};
     orders
-      .filter((userOrder) => userOrder.orderPlace === orderPlace)
       .forEach((order) => {
-        const { user, orderList, _id, orderPlace } = order;
+        const { user, orderList, _id } = order;
 
         const { name } = user;
 
@@ -57,6 +58,7 @@ function UserOrdersTable({ from, orderPlace }) {
       });
     return Object.values(userOrderMap);
   };
+
   const confirmFinishOrder = () => {
     setIsFinishingOrder(true); // Set the flag to indicate finishing order API call is in progress
     const splitwiseData = userOrders.map((userOrder) => {
@@ -67,7 +69,7 @@ function UserOrdersTable({ from, orderPlace }) {
     });
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/orders/splitwise`, { splitwiseData, from, offerPrice })
+      .post(`${process.env.REACT_APP_API_URL}/api/orders/finish`, { splitwiseData, from, offerPrice })
       .then(() => {
         // Fetch the updated user orders after finishing the orders
         axios
@@ -94,17 +96,13 @@ function UserOrdersTable({ from, orderPlace }) {
   };
 
   const cancelFinishOrder = () => {
-    // Close the confirmation modal
     setConfirmationModalOpen(false);
   };
+  
   const handleFinishOrder = () => {
     if (isFinishingOrder) {
-      // If finishing order API call is already in progress, return early
       return;
     }
-
-    // Open the confirmation modal
-
     setConfirmationModalOpen(true);
   };
 
@@ -191,19 +189,6 @@ function UserOrdersTable({ from, orderPlace }) {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <ToastContainer
-        position="bottom-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </>
   );
 }

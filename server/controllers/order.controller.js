@@ -55,8 +55,15 @@ const createOrder = async (req, res) => {
 
 // Controller to get all orders
 const getOrders = async (req, res) => {
+  const { orderPlace } = req.query;
+  const isFinished = req.query.isFinished === "true";
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({
+      orderPlace,
+      isFinished,
+    })
+      .populate("orderList.food")
+      .populate("user");
 
     res.status(200).json(orders);
   } catch (error) {
@@ -64,18 +71,26 @@ const getOrders = async (req, res) => {
   }
 };
 
-const getUnfinishedOrders = async (req, res) => {
+// Controller to get orders by user
+const getOrdersByUser = async (req, res) => {
   try {
-    const unfinishedOrders = await Order.find({
-      isFinished: false,
-    })
-      .populate("orderList.food")
-      .populate("user");
+    const { userId } = req.params;
+    const isFinished = req.query.isFinished == "true";
+    const limit = isFinished ? 10 : null;
 
-    res.status(200).json(unfinishedOrders);
+    const orders = await Order
+      .find({
+        user: userId,
+        isFinished,
+      })
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .populate("orderList.food");
+
+    res.status(200).json(orders);
   } catch (error) {
-    console.error("Error fetching unfinished orders:", error);
-    res.status(500).json({ error: "Failed to fetch unfinished orders" });
+    console.error("Error fetching unfinished orders by user:", error);
+    res.status(500).json({ error: "Failed to fetch unfinished orders by user" });
   }
 };
 
@@ -96,22 +111,7 @@ const deleteUnfinishedOrders = async (req, res) => {
   }
 };
 
-const getUnfinishedOrdersByUser = async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    const unfinishedOrders = await Order.find({
-      user: userId,
-      isFinished: false,
-    }).populate("orderList.food");
-
-    res.status(200).json(unfinishedOrders);
-  } catch (error) {
-    console.error("Error fetching unfinished orders by user:", error);
-    res.status(500).json({ error: "Failed to fetch unfinished orders by user" });
-  }
-};
-
+// Controller to delete an order or a food item from an order
 const deleteOrder = async (req, res) => {
   try {
     const { orderId, foodId } = req.params;
@@ -216,27 +216,13 @@ const finishOrder = async (req, res) => {
     console.error("Error finishing orders:", error);
     res.status(500).json({ error: error.message });
   }
-};
-
-const getCompletedOrdersByUser = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    //get last 10 finished order
-    const orders = await Order.find({ user: userId, isFinished: true }).limit(10).sort({ updatedAt: -1 }).populate("orderList.food");
-
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching completed orders" });
-  }
-};
+};;
 
 module.exports = {
   createOrder,
   getOrders,
-  getUnfinishedOrders,
-  getUnfinishedOrdersByUser,
+  getOrdersByUser,
   deleteOrder,
   finishOrder,
-  getCompletedOrdersByUser,
   deleteUnfinishedOrders,
 };

@@ -4,18 +4,17 @@ const {
   createOrder,
   getUnfinishedOrders,
   deleteOrder,
-  getUnfinishedOrdersByUser,
+  getOrdersByUser,
   finishOrder,
-  getCompletedOrdersByUser,
   deleteUnfinishedOrders,
+  getOrders,
 } = require("../controllers/order.controller");
 
-router.get("/", getUnfinishedOrders);
-router.get("/user/:userId", getUnfinishedOrdersByUser);
-router.get("/completed/user/:userId", getCompletedOrdersByUser);
-router.post("/splitwise", finishOrder);
+router.get("/", getOrders);
+router.get("/:userId", getOrdersByUser);
+router.post("/finish", finishOrder);
 router.post("/", createOrder);
-router.delete("/:orderId/food/:foodId", deleteOrder);
 router.delete("/", deleteUnfinishedOrders);
+router.delete("/:orderId/food/:foodId", deleteOrder);
 
 module.exports = router;
